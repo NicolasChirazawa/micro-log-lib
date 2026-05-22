@@ -1,0 +1,42 @@
+{
+  "name": "micro-log-lib",
+  "version": "1.0.0",
+  "files": ["lib"],
+  "main": "lib/core/logger_service.js",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "type": "commonjs",
+  "sideEffects": false,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "node playground/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NicolasChirazawa/biblioteca-logger.git"
+  },
+  "keywords": [  
+    "logger",
+    "logging",
+    "nodejs",
+    "console",
+    "sanitizer",
+    "security",
+    "debug",
+    "terminal"
+  ],
+  "author":  {
+    "name": "Nicolas Fernandes",
+    "url": "https://github.com/NicolasChirazawa"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NicolasChirazawa/biblioteca-logger/issues"
+  },
+  "homepage": "https://github.com/NicolasChirazawa/biblioteca-logger#readme",
+  "description": "Minimal Node.js logger with sanitization and customizable output."
+}

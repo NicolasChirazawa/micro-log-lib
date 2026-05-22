@@ -2,7 +2,7 @@
   "name": "micro-log-lib",
   "version": "1.0.0",
   "files": ["lib"],
-  "main": "lib/core/logger_service.js",
+  "main": "lib/index.js",
   "exports": {
     ".": "./lib/index.js"
   },
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NicolasChirazawa/biblioteca-logger.git"
+    "url": "git+https://github.com/NicolasChirazawa/micro-log-lib.git"
   },
   "keywords": [  
     "logger",
@@ -35,8 +35,8 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/NicolasChirazawa/biblioteca-logger/issues"
+    "url": "https://github.com/NicolasChirazawa/micro-log-lib/issues"
   },
-  "homepage": "https://github.com/NicolasChirazawa/biblioteca-logger#readme",
+  "homepage": "https://github.com/NicolasChirazawa/micro-log-lib#readme",
   "description": "Minimal Node.js logger with sanitization and customizable output."
 }

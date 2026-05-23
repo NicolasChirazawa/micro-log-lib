@@ -19,7 +19,7 @@
 
 ---
 
-## Instalação
+<h2 name="instalacao">Instalação</h2>
 
 ```bash
 npm install micro-log-lib
@@ -27,7 +27,7 @@ npm install micro-log-lib
 
 ---
 
-## Funcionalidades
+<h2 name="funcionalidades">Funcionalidades</h2>
 
 - **Níveis de log** — `debug`, `info`, `warn` e `error`
 - **Output flexível** — `LOG` (console.log), `JSON` ou ambos (`BOTH`)
@@ -37,7 +37,7 @@ npm install micro-log-lib
 
 ---
 
-## Começo rápido
+<h2 name="comeco-rapido">Começo Rápido</h2>
 
 ```js
 const { LoggerService, SanitizerService } = require('micro-log-lib');
@@ -52,7 +52,7 @@ LoggerService.error('Falha ao processar', { code: 500 }, 'PaymentService');
 
 ---
 
-## Configuração
+<h2 name="configuracao">Configuração</h2>
 
 ### LoggerService
 

@@ -21,5 +21,4 @@ class ServicoTeste_2 {
     }
 };
 
-ServicoTeste_2.novaOperacao();
 ServicoTeste.testarOperacao();

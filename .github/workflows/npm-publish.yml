@@ -30,3 +30,5 @@ jobs:
           VERSION=${TAG#v}                      # remove o "v" do "v1.2.0"
           npm version $VERSION --no-git-tag-version
           echo "Publicando versão:
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

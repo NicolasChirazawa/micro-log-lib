@@ -1,12 +1,9 @@
 name: Npm Publish
-
 on:
   release:
     types: [published]
-
 permissions:
   contents: write
-
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -27,8 +24,11 @@ jobs:
       - name: Sync version with release tag
         run: |
           TAG=${{ github.ref_name }}
-          VERSION=${TAG#v}                      # remove o "v" do "v1.2.0"
+          VERSION=${TAG#v}
           npm version $VERSION --no-git-tag-version
-          echo "Publicando versão:
+          echo "Publicando versão: $VERSION"
+
+      - name: Publish to npm
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

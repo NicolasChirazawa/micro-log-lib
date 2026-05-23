@@ -1,4 +1,4 @@
-const { LoggerService } = require('..//lib/core/logger_service');
+const { LoggerService } = require('../lib/core/logger_service');
 const { SanitizerService } = require('../lib/core/sanitizer_service');
 
 class ServicoTeste {

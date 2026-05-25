@@ -136,20 +136,6 @@ logger.info('Servidor iniciado na porta 3000');
 }
 ```
 
-#### BOTH
-
-```txt
-[INFO] Usuário autenticado
-```
-
-```json
-{
-  "level": "INFO",
-  "message": "Usuário autenticado",
-  "context": "AuthService"
-}
-```
-
 ---
 
 ## SanitizerService
@@ -182,8 +168,6 @@ SanitizerService.updateRedactValue(
 ```
 
 </details>
-
----
 
 ### Exemplo de sanitização integrada
 
@@ -352,13 +336,13 @@ static upper(variable: string): string {
 Input:
 
 ```ts
-'Nome Bacana'
+'Texto exemplo'
 ```
 
 Output:
 
 ```ts
-'NOME BACANA'
+'TEXTO EXEMPLO'
 ```
 
 ---
@@ -376,13 +360,13 @@ static lower(variable: string): string {
 Input:
 
 ```ts
-'Nome Bacana'
+'Texto exemplo'
 ```
 
 Output:
 
 ```ts
-'nome bacana'
+'texto exemplo'
 ```
 
 </details>

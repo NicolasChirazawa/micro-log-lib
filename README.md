@@ -197,7 +197,7 @@ Output:
 
 ---
 
-<h2 name="documentacao" align="center">Documentação</h2>
+<h2 name="documentacao">Documentação</h2>
 
 ## Serviços principais
 

@@ -15,7 +15,7 @@
   <a href="#funcionalidades">Funcionalidades</a> •
   <a href="#comeco-rapido">Começo rápido</a> •
   <a href="#configuracao">Configuração</a> •
-  <a href="#documentacao">Documentação</a> •
+  <a href="#documentacao">Documentação</a>
 </p>
 
 ---
@@ -59,6 +59,11 @@ LoggerService.error('Falha ao processar', { code: 500 }, 'PaymentService');
 
 O `LoggerService` aceita configurações por instância, permitindo diferentes comportamentos em partes distintas do código.
 
+<details>
+<summary>Atributos e exemplo de implementação</summary>
+<br>
+
+
 | Opção | Tipo | Descrição |
 |---|---|---|
 | `colorize` | `boolean` | Habilita cores no output via `console.log` |
@@ -77,12 +82,17 @@ const options = {
 const logger = new LoggerService(options);
 logger.info('Servidor iniciado na porta 3000');
 ```
+</details>
 
 ---
 
 ### SanitizerService
 
 O `SanitizerService` aplica configurações estáticas globais, afetando todos os logs do projeto independente da instância.
+
+<details>
+<summary>Atributos e exemplo de implementação</summary>
+<br>
 
 | Opção | Tipo | Descrição |
 |---|---|---|
@@ -100,20 +110,98 @@ SanitizerService.updateRedactValue(redactValue);
 
 // Campos serão automaticamente ocultados em todos os logs
 ```
+
+</details>
+
 <h2 name="documentacao">Documentação</h2>
 
 *Serviços principais (uso do desenvolvedor)*
 
+### SanitizerService
+Sanitizar os campos sensíveis de um JSON baseado nas suas chaves de sanitização. 
+
+<details>
+<summary>Documentação de atributos e métodos</summary>
+<br>
+  
+#### Atributos
+- `sanitizeFields`: Campos para serem sanitizados;
+- `redactValue`: Valor de substituição aos campos que serão sanitizados;
+
+#### Métodos
+- `updateSanitizeFields()`: Adição de novos campos ao atributo '#sanitizeFields';
+
+```ts
+static updateSanitizeFields(option: string[]): void {
+  // [...]
+  SanitizerService.#sanitizeFields = merge;
+};
+
+// Exemplo de input: ['teste 1', 'teste 2', 'teste 3', 'teste 4'];
+```
+
+- `updateSanitizeValue()`: Adição de novos campos ao atributo '#sanitizeFields';
+
+```ts
+static updateSanitizeFields(text: string): void {
+  // [...]
+  SanitizerService.redactValue = value;
+};
+
+// Exemplo de input: '[TEXTO CENSURADO]';
+```
+
+- `sanitizeData()`: Função responsável pela sanitização dos dados;
+```ts
+
+/*
+  Sanitiza baseado em chaves de objetos;
+  A chave não é sensitive case;
+  Sanitiza independente do nível de profundidade no log (construído de forma recursiva);
+  
+*/
+
+static sanitizeData(data) {
+  let keys = Object.keys(data);
+  /// [...]
+  return data;
+}
+
+  /* 
+    Exemplo de input: {
+      e-mail: teste@gmail.com,
+      senha: 123456789,
+      data: {
+        telefone: 1234-5678
+      }
+    };
+  
+  /*
+    Exemplo de output:  {
+      e-mail: teste@gmail.com,
+      senha: [TEXTO CENSURADO],
+      data: {
+        telefone: [TEXTO CENSURADO]
+      }
+    }
+  */
+```
+
+</details>
 
 ---
+
 *Serviços auxiliares (uso da biblioteca)*
 
 ### NormalizeService
-#### Funcionalidades
-- Padronizar strings entre serviços;
+Padronizar strings entre serviços.
+
+<details>
+<summary>Documentação de atributos e métodos</summary>
+<br>
 
 #### Métodos
-- **upper()**: Cria e retorna uma string normalizada para maiúsculo;
+- `upper()`: Cria e retorna uma string normalizada para maiúsculo;
 
 ```ts
 static upper(variable: string): string {
@@ -124,7 +212,7 @@ static upper(variable: string): string {
 // Exemplo de retorno: 'NOME BACANA'
 ```
 
-- **lower()**: Cria e retorna uma string normalizada para minúsculo;
+- `lower()`: Cria e retorna uma string normalizada para minúsculo;
 
 ```ts
 static lower(variable: string): string {
@@ -135,19 +223,24 @@ static lower(variable: string): string {
 // Exemplo de retorno: 'nome bacana'
   ```
 
-### UUIDService
+</details>
 
-#### Funcionalidades
-- Criar UUIDs para outros serviços;
+### UUIDService
+Criar UUIDs para outros serviços;
+
+<details>
+<summary>Documentação de atributos e métodos</summary>
+<br>
 
 #### Métodos
-- **generate()**: Cria e retorna uma substring de UUID de 20 caracteres com os hiféns limpos;
+- `generate()`: Cria e retorna uma substring de UUID de 20 caracteres com os hiféns limpos;
 
 ```ts
 static generate(): string {
-    return randomUUID().replaceAll('-', '').slice(0, 20);
+  return randomUUID().replaceAll('-', '').slice(0, 20);
 };
 
 // Exemplo de retorno: cf35f8e0dbf4813a5259
 ```
-    
+
+</details>

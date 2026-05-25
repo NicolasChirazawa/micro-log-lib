@@ -20,7 +20,7 @@
 
 ---
 
-<h2 name="instalacao" align="center">Instalação</h2>
+<h2 name="instalacao">Instalação</h2>
 
 ```bash
 npm install micro-log-lib
@@ -28,7 +28,7 @@ npm install micro-log-lib
 
 ---
 
-<h2 name="funcionalidades" align="center">Funcionalidades</h2>
+<h2 name="funcionalidades">Funcionalidades</h2>
 
 - **Níveis de log** — `debug`, `info`, `warn` e `error`;
 - **Output flexível** — `LOG`, `JSON` ou ambos (`BOTH`);
@@ -39,7 +39,7 @@ npm install micro-log-lib
 
 ---
 
-<h2 name="primeiros-passos" align="center">Primeiros passos</h2>
+<h2 name="primeiros-passos">Primeiros passos</h2>
 
 ```js
 const { LoggerService } = require('micro-log-lib');
@@ -73,20 +73,17 @@ LoggerService.error(
 
 ---
 
-<h2 name="configuracao" align="center">Configuração</h2>
+<h2 name="configuracao">Configuração</h2>
 
-## LoggerService
+### LoggerService
 
 O `LoggerService` pode ser utilizado:
 
-- De forma estática
-- Ou via instância com configurações específicas
-
-Exemplo utilizando instância personalizada:
+- De forma estática;
+- Via instância com configurações específicas;
 
 <details>
-<summary>Atributos e exemplo de implementação</summary>
-<br>
+<summary>Exemplo utilizando instância personalizada:</summary>
 
 | Opção | Tipo | Descrição |
 |---|---|---|
@@ -115,17 +112,16 @@ logger.info('Servidor iniciado na porta 3000');
 
 </details>
 
----
+<details>
+<summary>Tipos de output</summary>
 
-### Tipos de output
-
-#### LOG
+### LOG
 
 ```txt
 [INFO] Usuário autenticado
 ```
 
-#### JSON
+### JSON
 
 ```json
 {
@@ -135,6 +131,8 @@ logger.info('Servidor iniciado na porta 3000');
 }
 ```
 
+</details>
+
 ---
 
 ## SanitizerService
@@ -143,7 +141,6 @@ O `SanitizerService` aplica configurações globais, afetando todos os logs da a
 
 <details>
 <summary>Atributos e exemplo de implementação</summary>
-<br>
 
 | Opção | Tipo | Descrição |
 |---|---|---|
@@ -168,7 +165,8 @@ SanitizerService.updateRedactValue(
 
 </details>
 
-### Exemplo de sanitização integrada
+<details>
+<summary>Exemplo de sanitização integrada</summary>
 
 ```js
 const { LoggerService, SanitizerService } = require('micro-log-lib');
@@ -195,6 +193,8 @@ Output:
 }
 ```
 
+</details>
+
 ---
 
 <h2 name="documentacao" align="center">Documentação</h2>
@@ -207,7 +207,6 @@ Responsável por sanitizar campos sensíveis de objetos JSON com base nas chaves
 
 <details>
 <summary>Documentação de atributos e métodos</summary>
-<br>
 
 ## Atributos
 
@@ -232,7 +231,7 @@ static updateSanitizeFields(option: string[]): void {
 }
 ```
 
-Exemplo:
+Exemplo de input:
 
 ```ts
 [
@@ -255,7 +254,7 @@ static updateRedactValue(text: string): void {
 }
 ```
 
-Exemplo:
+Exemplo de input:
 
 ```ts
 '[SENSITIVE DATA]'
@@ -318,7 +317,6 @@ Responsável pela padronização de strings entre os serviços internos.
 
 <details>
 <summary>Documentação de atributos e métodos</summary>
-<br>
 
 ## Métodos
 
@@ -332,13 +330,13 @@ static upper(variable: string): string {
 }
 ```
 
-Input:
+Exemplo de input:
 
 ```ts
 'Texto exemplo'
 ```
 
-Output:
+Exemplo de output:
 
 ```ts
 'TEXTO EXEMPLO'
@@ -356,13 +354,13 @@ static lower(variable: string): string {
 }
 ```
 
-Input:
+Exemplo de input:
 
 ```ts
 'Texto exemplo'
 ```
 
-Output:
+Exemplo de output:
 
 ```ts
 'texto exemplo'
@@ -378,7 +376,6 @@ Responsável pela geração de UUIDs utilizados internamente pela biblioteca.
 
 <details>
 <summary>Documentação de atributos e métodos</summary>
-<br>
 
 ## Métodos
 
@@ -394,7 +391,7 @@ static generate(): string {
 }
 ```
 
-Exemplo de retorno:
+Exemplo de output:
 
 ```txt
 cf35f8e0dbf4813a5259

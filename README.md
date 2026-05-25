@@ -6,14 +6,15 @@
 </p>
 
 <p align="center">
-  Biblioteca de logging extremamente leve, conveniente e configurável.<br/>
-  Projetada para atender projetos em qualquer nível de maturidade.
+  Biblioteca de logging leve, configurável e pronta para produção.<br/>
+  Projetada para aplicações de qualquer nível de maturidade.
 </p>
 
 <p align="center">
   <a href="#instalacao">Instalação</a> •
+  <a href="#por-que-usar">Por que usar?</a> •
   <a href="#funcionalidades">Funcionalidades</a> •
-  <a href="#comeco-rapido">Começo rápido</a> •
+  <a href="#primeiros-passos">Primeiros passos</a> •
   <a href="#configuracao">Configuração</a> •
   <a href="#documentacao">Documentação</a>
 </p>
@@ -28,47 +29,83 @@ npm install micro-log-lib
 
 ---
 
-<h2 name="funcionalidades">Funcionalidades</h2>
+<h2 name="por-que-usar">Por que usar?</h2>
 
-- **Níveis de log** — `debug`, `info`, `warn` e `error`
-- **Output flexível** — `LOG` (console.log), `JSON` ou ambos (`BOTH`)
-- **Cores customizáveis** — configuráveis por nível de log
-- **Sanitização de campos sensíveis** — com valor substituto customizável
-- **Rastreabilidade** — via códigos UUID automáticos
+- Zero dependências pesadas
+- Fácil integração em aplicações Node.js
+- Logs legíveis e estruturados
+- Sanitização nativa de campos sensíveis
+- Configuração mínima
+- Ideal para APIs, microsserviços e aplicações backend
+- Rastreabilidade via UUID automático
 
 ---
 
-<h2 name="comeco-rapido">Começo Rápido</h2>
+<h2 name="funcionalidades">Funcionalidades</h2>
+
+- **Níveis de log** — `debug`, `info`, `warn` e `error`
+- **Output flexível** — `LOG`, `JSON` ou ambos (`BOTH`)
+- **Cores customizáveis** — configuráveis por nível de log
+- **Sanitização automática** — ocultação de dados sensíveis
+- **Rastreabilidade** — geração automática de UUID
+- **Configuração por instância** — diferentes comportamentos por contexto
+
+---
+
+<h2 name="primeiros-passos">Primeiros passos</h2>
 
 ```js
-const { LoggerService, SanitizerService } = require('micro-log-lib');
+const { LoggerService } = require('micro-log-lib');
 
-// LoggerService.{level}(message, data_object?, class_name?)
+// LoggerService.{level}(message, data?, context?)
 
-LoggerService.info('Usuário autenticado', { userId: 'abc123' }, 'AuthService');
-LoggerService.debug('Iniciando conexão', { host: 'localhost' }, 'DbService');
-LoggerService.warn('Rate limit próximo', { remaining: 5 }, 'ApiService');
-LoggerService.error('Falha ao processar', { code: 500 }, 'PaymentService');
+LoggerService.info(
+  'Usuário autenticado',
+  { userId: 'abc123' },
+  'AuthService'
+);
+
+LoggerService.debug(
+  'Iniciando conexão',
+  { host: 'localhost' },
+  'DatabaseService'
+);
+
+LoggerService.warn(
+  'Rate limit próximo do limite',
+  { remaining: 5 },
+  'ApiService'
+);
+
+LoggerService.error(
+  'Falha ao processar pagamento',
+  { code: 500 },
+  'PaymentService'
+);
 ```
 
 ---
 
 <h2 name="configuracao">Configuração</h2>
 
-### LoggerService
+## LoggerService
 
-O `LoggerService` aceita configurações por instância, permitindo diferentes comportamentos em partes distintas do código.
+O `LoggerService` pode ser utilizado:
+
+- De forma estática
+- Ou via instância com configurações específicas
+
+Exemplo utilizando instância personalizada:
 
 <details>
 <summary>Atributos e exemplo de implementação</summary>
 <br>
 
-
 | Opção | Tipo | Descrição |
 |---|---|---|
-| `colorize` | `boolean` | Habilita cores no output via `console.log` |
-| `outputMode` | `'LOG' \| 'JSON' \| 'BOTH'` | Define o formato do output dos logs |
-| `type` | `Record<string, string>` | Cor por nível: `'ERROR'`, `'WARN'`, `'DEBUG'`, `'INFO'` |
+| `colorize` | `boolean` | Habilita cores no output do terminal |
+| `outputMode` | `'LOG' \| 'JSON' \| 'BOTH'` | Define o formato de saída dos logs |
+| `type` | `Record<string, string>` | Cor por nível de log |
 
 ```js
 const { LoggerService } = require('micro-log-lib');
@@ -76,19 +113,60 @@ const { LoggerService } = require('micro-log-lib');
 const options = {
   colorize: true,
   outputMode: 'BOTH',
-  type: { 'ERROR': 'RED' }
+  type: {
+    ERROR: 'RED',
+    WARN: 'YELLOW',
+    INFO: 'BLUE',
+    DEBUG: 'GREEN'
+  }
 };
 
 const logger = new LoggerService(options);
+
 logger.info('Servidor iniciado na porta 3000');
 ```
+
 </details>
 
 ---
 
-### SanitizerService
+### Tipos de output
 
-O `SanitizerService` aplica configurações estáticas globais, afetando todos os logs do projeto independente da instância.
+#### LOG
+
+```txt
+[INFO] Usuário autenticado
+```
+
+#### JSON
+
+```json
+{
+  "level": "INFO",
+  "message": "Usuário autenticado",
+  "context": "AuthService"
+}
+```
+
+#### BOTH
+
+```txt
+[INFO] Usuário autenticado
+```
+
+```json
+{
+  "level": "INFO",
+  "message": "Usuário autenticado",
+  "context": "AuthService"
+}
+```
+
+---
+
+## SanitizerService
+
+O `SanitizerService` aplica configurações globais, afetando todos os logs da aplicação independentemente da instância utilizada.
 
 <details>
 <summary>Atributos e exemplo de implementação</summary>
@@ -96,151 +174,268 @@ O `SanitizerService` aplica configurações estáticas globais, afetando todos o
 
 | Opção | Tipo | Descrição |
 |---|---|---|
-| `sanitizeFields` | `string[]` | Lista de campos a serem ocultados nos logs |
-| `redactValue` | `string` | Texto substituto para os campos sanitizados |
+| `sanitizeFields` | `string[]` | Campos que devem ser ocultados |
+| `redactValue` | `string` | Texto substituto dos campos sanitizados |
 
 ```js
 const { SanitizerService } = require('micro-log-lib');
 
-const sensitiveFields = ['access-token', 'refresh-token', 'password'];
+const sensitiveFields = [
+  'access-token',
+  'refresh-token',
+  'password'
+];
+
 SanitizerService.updateSanitizeFields(sensitiveFields);
 
-const redactValue = '[SENSITIVE DATA]';
-SanitizerService.updateRedactValue(redactValue);
-
-// Campos serão automaticamente ocultados em todos os logs
-```
-
-</details>
-
-<h2 name="documentacao">Documentação</h2>
-
-*Serviços principais (uso do desenvolvedor)*
-
-### SanitizerService
-Sanitizar os campos sensíveis de um JSON baseado nas suas chaves de sanitização. 
-
-<details>
-<summary>Documentação de atributos e métodos</summary>
-<br>
-  
-#### Atributos
-- `sanitizeFields`: Campos para serem sanitizados;
-- `redactValue`: Valor de substituição aos campos que serão sanitizados;
-
-#### Métodos
-- `updateSanitizeFields()`: Adição de novos campos ao atributo '#sanitizeFields';
-
-```ts
-static updateSanitizeFields(option: string[]): void {
-  // [...]
-  SanitizerService.#sanitizeFields = merge;
-};
-
-// Exemplo de input: ['teste 1', 'teste 2', 'teste 3', 'teste 4'];
-```
-
-- `updateSanitizeValue()`: Adição de novos campos ao atributo '#sanitizeFields';
-
-```ts
-static updateSanitizeFields(text: string): void {
-  // [...]
-  SanitizerService.redactValue = value;
-};
-
-// Exemplo de input: '[TEXTO CENSURADO]';
-```
-
-- `sanitizeData()`: Função responsável pela sanitização dos dados;
-```ts
-
-/*
-  Sanitiza baseado em chaves de objetos;
-  A chave não é sensitive case;
-  Sanitiza independente do nível de profundidade no log (construído de forma recursiva);
-  
-*/
-
-static sanitizeData(data) {
-  let keys = Object.keys(data);
-  /// [...]
-  return data;
-}
-
-  /* 
-    Exemplo de input: {
-      e-mail: teste@gmail.com,
-      senha: 123456789,
-      data: {
-        telefone: 1234-5678
-      }
-    };
-  
-  /*
-    Exemplo de output:  {
-      e-mail: teste@gmail.com,
-      senha: [TEXTO CENSURADO],
-      data: {
-        telefone: [TEXTO CENSURADO]
-      }
-    }
-  */
+SanitizerService.updateRedactValue(
+  '[SENSITIVE DATA]'
+);
 ```
 
 </details>
 
 ---
 
-*Serviços auxiliares (uso da biblioteca)*
+### Exemplo de sanitização integrada
 
-### NormalizeService
-Padronizar strings entre serviços.
+```js
+const {
+  LoggerService,
+  SanitizerService
+} = require('micro-log-lib');
+
+SanitizerService.updateSanitizeFields([
+  'password'
+]);
+
+LoggerService.info(
+  'Login realizado',
+  {
+    email: 'user@email.com',
+    password: '123456'
+  }
+);
+```
+
+Output:
+
+```json
+{
+  "email": "user@email.com",
+  "password": "[SENSITIVE DATA]"
+}
+```
+
+---
+
+<h2 name="documentacao">Documentação</h2>
+
+## Serviços principais
+
+### SanitizerService
+
+Responsável por sanitizar campos sensíveis de objetos JSON com base nas chaves configuradas.
 
 <details>
 <summary>Documentação de atributos e métodos</summary>
 <br>
 
-#### Métodos
-- `upper()`: Cria e retorna uma string normalizada para maiúsculo;
+## Atributos
+
+- `sanitizeFields`
+  - Campos que devem ser sanitizados
+
+- `redactValue`
+  - Valor substituto utilizado na sanitização
+
+---
+
+## Métodos
+
+### updateSanitizeFields()
+
+Atualiza os campos que devem ser sanitizados.
 
 ```ts
-static upper(variable: string): string {
-    return String(variable).toUpperCase();
-};
-
-// Exemplo de input: 'Nome Bacana'
-// Exemplo de retorno: 'NOME BACANA'
+static updateSanitizeFields(
+  option: string[]
+): void {
+  // [...]
+  SanitizerService.#sanitizeFields = merge;
+}
 ```
 
-- `lower()`: Cria e retorna uma string normalizada para minúsculo;
+Exemplo:
 
 ```ts
-static lower(variable: string): string {
-    return String(variable).toLowerCase();
-}
+[
+  'password',
+  'access-token',
+  'refresh-token'
+]
+```
 
-// Exemplo de input: 'Nome Bacana'
-// Exemplo de retorno: 'nome bacana'
-  ```
+---
+
+### updateRedactValue()
+
+Atualiza o valor utilizado para substituir os campos sensíveis.
+
+```ts
+static updateRedactValue(
+  text: string
+): void {
+  // [...]
+  SanitizerService.redactValue = value;
+}
+```
+
+Exemplo:
+
+```ts
+'[SENSITIVE DATA]'
+```
+
+---
+
+### sanitizeData()
+
+Função responsável pela sanitização dos dados.
+
+Características:
+
+- Sanitização baseada nas chaves do objeto
+- Comparação case insensitive
+- Sanitização recursiva
+- Compatível com múltiplos níveis de profundidade
+
+```ts
+static sanitizeData(data) {
+  let keys = Object.keys(data);
+
+  // [...]
+
+  return data;
+}
+```
+
+Exemplo de input:
+
+```json
+{
+  "email": "teste@gmail.com",
+  "password": "123456789",
+  "data": {
+    "phone": "1234-5678"
+  }
+}
+```
+
+Exemplo de output:
+
+```json
+{
+  "email": "teste@gmail.com",
+  "password": "[SENSITIVE DATA]",
+  "data": {
+    "phone": "[SENSITIVE DATA]"
+  }
+}
+```
 
 </details>
 
-### UUIDService
-Criar UUIDs para outros serviços;
+---
+
+## Serviços auxiliares
+
+### NormalizeService
+
+Responsável pela padronização de strings entre os serviços internos.
 
 <details>
 <summary>Documentação de atributos e métodos</summary>
 <br>
 
-#### Métodos
-- `generate()`: Cria e retorna uma substring de UUID de 20 caracteres com os hiféns limpos;
+## Métodos
+
+### upper()
+
+Converte uma string para letras maiúsculas.
+
+```ts
+static upper(variable: string): string {
+  return String(variable).toUpperCase();
+}
+```
+
+Input:
+
+```ts
+'Nome Bacana'
+```
+
+Output:
+
+```ts
+'NOME BACANA'
+```
+
+---
+
+### lower()
+
+Converte uma string para letras minúsculas.
+
+```ts
+static lower(variable: string): string {
+  return String(variable).toLowerCase();
+}
+```
+
+Input:
+
+```ts
+'Nome Bacana'
+```
+
+Output:
+
+```ts
+'nome bacana'
+```
+
+</details>
+
+---
+
+### UUIDService
+
+Responsável pela geração de UUIDs utilizados internamente pela biblioteca.
+
+<details>
+<summary>Documentação de atributos e métodos</summary>
+<br>
+
+## Métodos
+
+### generate()
+
+Cria e retorna uma substring UUID sem hífens contendo 20 caracteres.
 
 ```ts
 static generate(): string {
-  return randomUUID().replaceAll('-', '').slice(0, 20);
-};
+  return randomUUID()
+    .replaceAll('-', '')
+    .slice(0, 20);
+}
+```
 
-// Exemplo de retorno: cf35f8e0dbf4813a5259
+Exemplo de retorno:
+
+```txt
+cf35f8e0dbf4813a5259
 ```
 
 </details>

@@ -14,7 +14,8 @@
   <a href="#instalacao">Instalação</a> •
   <a href="#funcionalidades">Funcionalidades</a> •
   <a href="#comeco-rapido">Começo rápido</a> •
-  <a href="#configuracao">Configuração</a>
+  <a href="#configuracao">Configuração</a> •
+  <a href="#documentacao">Documentação</a> •
 </p>
 
 ---
@@ -99,3 +100,54 @@ SanitizerService.updateRedactValue(redactValue);
 
 // Campos serão automaticamente ocultados em todos os logs
 ```
+<h2 name="documentacao">Documentação</h2>
+
+*Serviços principais (uso do desenvolvedor)*
+
+
+---
+*Serviços auxiliares (uso da biblioteca)*
+
+### NormalizeService
+#### Funcionalidades
+- Padronizar strings entre serviços;
+
+#### Métodos
+- **upper()**: Cria e retorna uma string normalizada para maiúsculo;
+
+```ts
+static upper(variable: string): string {
+    return String(variable).toUpperCase();
+};
+
+// Exemplo de input: 'Nome Bacana'
+// Exemplo de retorno: 'NOME BACANA'
+```
+
+- **lower()**: Cria e retorna uma string normalizada para minúsculo;
+
+```ts
+static lower(variable: string): string {
+    return String(variable).toLowerCase();
+}
+
+// Exemplo de input: 'Nome Bacana'
+// Exemplo de retorno: 'nome bacana'
+  ```
+
+### UUIDService
+
+#### Funcionalidades
+- Criar UUIDs para outros serviços;
+
+#### Métodos
+- **generate()**: Cria e retorna uma substring de UUID de 20 caracteres com os hiféns limpos;
+
+```ts
+static generate(): string {
+    return randomUUID().replaceAll('-', '').slice(0, 20);
+};
+
+// Exemplo de retorno: cf35f8e0dbf4813a5259
+```
+    

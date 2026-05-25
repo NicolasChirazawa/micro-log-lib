@@ -29,26 +29,14 @@ npm install micro-log-lib
 
 ---
 
-<h2 name="por-que-usar">Por que usar?</h2>
-
-- Zero dependências pesadas
-- Fácil integração em aplicações Node.js
-- Logs legíveis e estruturados
-- Sanitização nativa de campos sensíveis
-- Configuração mínima
-- Ideal para APIs, microsserviços e aplicações backend
-- Rastreabilidade via UUID automático
-
----
-
 <h2 name="funcionalidades">Funcionalidades</h2>
 
-- **Níveis de log** — `debug`, `info`, `warn` e `error`
-- **Output flexível** — `LOG`, `JSON` ou ambos (`BOTH`)
-- **Cores customizáveis** — configuráveis por nível de log
-- **Sanitização automática** — ocultação de dados sensíveis
-- **Rastreabilidade** — geração automática de UUID
-- **Configuração por instância** — diferentes comportamentos por contexto
+- **Níveis de log** — `debug`, `info`, `warn` e `error`;
+- **Output flexível** — `LOG`, `JSON` ou ambos (`BOTH`);
+- **Cores customizáveis** — configuráveis por nível de log;
+- **Sanitização automática** — ocultação de dados sensíveis;
+- **Rastreabilidade** — geração automática de UUID;
+- **Configuração por instância** — diferentes comportamentos por contexto;
 
 ---
 
@@ -200,10 +188,7 @@ SanitizerService.updateRedactValue(
 ### Exemplo de sanitização integrada
 
 ```js
-const {
-  LoggerService,
-  SanitizerService
-} = require('micro-log-lib');
+const { LoggerService, SanitizerService } = require('micro-log-lib');
 
 SanitizerService.updateSanitizeFields([
   'password'
@@ -258,9 +243,7 @@ Responsável por sanitizar campos sensíveis de objetos JSON com base nas chaves
 Atualiza os campos que devem ser sanitizados.
 
 ```ts
-static updateSanitizeFields(
-  option: string[]
-): void {
+static updateSanitizeFields(option: string[]): void {
   // [...]
   SanitizerService.#sanitizeFields = merge;
 }
@@ -283,9 +266,7 @@ Exemplo:
 Atualiza o valor utilizado para substituir os campos sensíveis.
 
 ```ts
-static updateRedactValue(
-  text: string
-): void {
+static updateRedactValue(text: string): void {
   // [...]
   SanitizerService.redactValue = value;
 }
@@ -313,9 +294,7 @@ Características:
 ```ts
 static sanitizeData(data) {
   let keys = Object.keys(data);
-
   // [...]
-
   return data;
 }
 ```

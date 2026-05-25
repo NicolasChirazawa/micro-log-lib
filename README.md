@@ -12,7 +12,6 @@
 
 <p align="center">
   <a href="#instalacao">Instalação</a> •
-  <a href="#por-que-usar">Por que usar?</a> •
   <a href="#funcionalidades">Funcionalidades</a> •
   <a href="#primeiros-passos">Primeiros passos</a> •
   <a href="#configuracao">Configuração</a> •
@@ -21,7 +20,7 @@
 
 ---
 
-<h2 name="instalacao">Instalação</h2>
+<h2 name="instalacao" align="center">Instalação</h2>
 
 ```bash
 npm install micro-log-lib
@@ -29,7 +28,7 @@ npm install micro-log-lib
 
 ---
 
-<h2 name="funcionalidades">Funcionalidades</h2>
+<h2 name="funcionalidades" align="center">Funcionalidades</h2>
 
 - **Níveis de log** — `debug`, `info`, `warn` e `error`;
 - **Output flexível** — `LOG`, `JSON` ou ambos (`BOTH`);
@@ -40,7 +39,7 @@ npm install micro-log-lib
 
 ---
 
-<h2 name="primeiros-passos">Primeiros passos</h2>
+<h2 name="primeiros-passos" align="center">Primeiros passos</h2>
 
 ```js
 const { LoggerService } = require('micro-log-lib');
@@ -74,7 +73,7 @@ LoggerService.error(
 
 ---
 
-<h2 name="configuracao">Configuração</h2>
+<h2 name="configuracao" align="center">Configuração</h2>
 
 ## LoggerService
 
@@ -198,7 +197,7 @@ Output:
 
 ---
 
-<h2 name="documentacao">Documentação</h2>
+<h2 name="documentacao" align="center">Documentação</h2>
 
 ## Serviços principais
 

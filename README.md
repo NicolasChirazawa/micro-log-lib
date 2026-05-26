@@ -15,7 +15,7 @@
   <a href="#funcionalidades">Funcionalidades</a> •
   <a href="#primeiros-passos">Primeiros passos</a> •
   <a href="#configuracao">Configuração</a> •
-  <a href="#documentacao">Documentação</a>
+  <a href="#como-usar">Como usar?</a>
 </p>
 
 ---
@@ -136,6 +136,8 @@ UUID: cf35f8e0dbf4813a5259
 
 </details>
 
+---
+
 ### SanitizerService
 
 O `SanitizerService` aplica configurações globais, afetando todos os logs da aplicação independentemente da instância utilizada.
@@ -198,9 +200,7 @@ Output:
 
 ---
 
-<h2 name="documentacao">Documentação</h2>
-
-### _Serviços principais_
+<h2 name="documentacao">Como usar?</h2>
 
 ### LoggerService
 
@@ -209,18 +209,12 @@ Responsável pela geração de loggers estruturados.
 <details>
 <summary>Documentação de atributos e métodos</summary>
 
-## Atributos
-
-- `valid`
-  - Objeto de validação para configuração da classe `LoggerService`
-
-- `colors`
-  - Objeto com as cores disponíveis para os logs
+### Atributo(s)
 
 - `config`
    - Campo de configuração da instância da classe `LoggerService`
 
-## Métodos
+### Método(s)
 
 #### constructor()
 
@@ -234,75 +228,110 @@ constructor(options = {}) {
 }
 ```
 
-#### validate()
+#### debug()
 
-Validação da configuração gerada para o `LoggerService`.
+Usado para receber diagnósticos detalhados sobre o sistema à desenvolvedores dentro do ambiente de teste.
+
+Casos comuns:
+- Valor de variável; 
+- Fluxo detalhado;
+
+Exemplo: ("SELECT 23+ users from database", users);
 
 ```ts
-validate(options) {
-  const keys_options = Object.keys(options);
-  // [...]
+debug() {
+  return this.debug('DEBUG', message, data, service, uuid);
 }
 ```
 
-#### log()
+#### info()
 
-Função fundamental do sistema que realiza toda a base do projeto
+Eventos gerais do sistema, uma confirmação se o sistema funciona corretamente
+
+Casos comuns:
+- Inicialização de serviços;
+- Conclusão de serviços;
+
+Exemplo: ("User login successful:", username)
 
 ```ts
-log(type, message, data = null, service = null, uuid = null) {
-  type = NormalizeService.upper(type);
-  // [...]
-  return logData || uuid;
+info() {
+  return this.info('INFO', message, data, service, uuid);
 }
 ```
 
-#### debug() / info() / warn() / error() / critical()
+#### warn()
 
-Métodos utilitários para registrar logs por nível.
+Situação inesperada mas que não interrompe um fluxo, entretanto, requerem atenção 
+
+Casos comuns:
+- Pouco espaço no disco;
+- Uso de CPU muito alto;
+
+Exemplo: ("CPU has achivied 85% of memory")
 
 ```ts
-debug/info/warn/error/critical(options) {
-  return this.{level}({level}, message, data, service, uuid);
+warn() {
+  return this.warn('WARN', message, data, service, uuid);
 }
 ```
 
-#### output()
+#### error()
 
-Responsável pelo `output` JSON e console.log() dos logs.
+Interrompimento do fluxo de uma operação.
+
+- Operação com erro; 
+- Ausência de dados;
+
+Exemplo: ("User not found on DB")
 
 ```ts
-output(data, outputMethod) {
-    if (outputMethod === 'LOG' || outputMethod === 'BOTH') {
-    // [...]
-    return;
+error() {
+  return this.warn('WARN', message, data, service, uuid);
+}
+```
+
+#### fatal()
+
+Erro que leva ao encerramento da aplicação.
+
+- Erro não tratado; 
+- Uso de CPU estourou;
+
+Exemplo: ("Memory usage exceeds max")
+
+```ts
+fatal() {
+  return this.warn('FATAL', message, data, service, uuid);
 }
 ```
  
 </details>
 
+---
+
 ### SanitizerService
 
-Responsável por sanitizar campos sensíveis de objetos JSON com base nas chaves configuradas.
+Responsável pela sanitização dos dados dos logs.
 
 <details>
 <summary>Documentação de atributos e métodos</summary>
 
-## Atributos
+### Atributo(s)
 
 - `sanitizeFields`
-  - Campos que devem ser sanitizados
+  - Objeto que possui os campos a serem sanitizados
 
 - `redactValue`
   - Valor substituto utilizado na sanitização
 
----
+### Método(s)
 
-## Métodos
+#### addFields()
 
-#### updateSanitizeFields()
+Adiciona campos personalizados que também devem ser sanitizados.
 
-Atualiza os campos que devem ser sanitizados.
+- Método estático, logo, aplica-se independentemente da instância;
 
 ```ts
 static updateSanitizeFields(option: string[]): void {
@@ -311,19 +340,19 @@ static updateSanitizeFields(option: string[]): void {
 }
 ```
 
-Exemplo de input:
-
-```ts
+Input:
 [
   'password',
   'access-token',
   'refresh-token'
 ]
-```
 
 #### updateRedactValue()
 
 Atualiza o valor utilizado para substituir os campos sensíveis.
+
+Características:
+- Método estático, logo, aplica-se independentemente da instância;
 
 ```ts
 static updateRedactValue(text: string): void {
@@ -332,34 +361,27 @@ static updateRedactValue(text: string): void {
 }
 ```
 
-Exemplo de input:
+Input: '[SENSITIVE DATA]'
 
-```ts
-'[SENSITIVE DATA]'
-```
+#### sanitize()
 
----
-
-#### sanitizeData()
-
-Função responsável pela sanitização dos dados.
+Responsável pela sanitização dos dados dos logs.
 
 Características:
 
 - Sanitização baseada nas chaves do objeto;
-- Comparação case insensitive;
-- Sanitização recursiva;
-- Compatível com múltiplos níveis de profundidade;
+- As chaves são case insensitive;
+- Sanitização compatível com múltiplos níveis de profundidade construído com recursivdade;
 
 ```ts
-static sanitizeData(data) {
+static sanitize(data) {
   let keys = Object.keys(data);
   // [...]
   return data;
 }
 ```
 
-Exemplo de input:
+Input:
 
 ```json
 {
@@ -371,7 +393,7 @@ Exemplo de input:
 }
 ```
 
-Exemplo de output:
+Output:
 
 ```json
 {
@@ -383,93 +405,6 @@ Exemplo de output:
 }
 ```
 
-</details>
-
----
-
-### _Serviços auxiliares_
-
-### NormalizeService
-
-Responsável pela padronização de strings entre os serviços internos.
-
-<details>
-<summary>Documentação de atributos e métodos</summary>
-
-## Métodos
-
-#### upper()
-
-Converte uma string para letras maiúsculas.
-
-```ts
-static upper(variable: string): string {
-  return String(variable).toUpperCase();
-}
-```
-
-Exemplo de input:
-
-```ts
-'Texto exemplo'
-```
-
-Exemplo de output:
-
-```ts
-'TEXTO EXEMPLO'
-```
-
-#### lower()
-
-Converte uma string para letras minúsculas.
-
-```ts
-static lower(variable: string): string {
-  return String(variable).toLowerCase();
-}
-```
-
-Exemplo de input:
-
-```ts
-'Texto exemplo'
-```
-
-Exemplo de output:
-
-```ts
-'texto exemplo'
-```
-
-</details>
-
-
-### UUIDService
-
-Responsável pela geração de UUIDs utilizados internamente pela biblioteca.
-
-<details>
-<summary>Documentação de atributos e métodos</summary>
-
-## Métodos
-
-#### generate()
-
-Cria e retorna uma substring UUID sem hífens contendo 20 caracteres.
-
-```ts
-static generate(): string {
-  return randomUUID()
-    .replaceAll('-', '')
-    .slice(0, 20);
-}
-```
-
-Exemplo de output:
-
-```txt
-cf35f8e0dbf4813a5259
-```
+##### *Supondo que os campos do sanitizer fields são: 'password' e 'phone'
 
 </details>

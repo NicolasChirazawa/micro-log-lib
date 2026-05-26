@@ -8,7 +8,7 @@ class ServicoTeste {
         const options = { colorize: true, 'teste': 'legal', outputMode: 'BOTH', type: { 'ERROR': 'RED' } };
         const teste_2 = new LoggerService(options);
 
-        console.log(teste_2.info('Teste', options, ServicoTeste))
+        console.log(teste_2.critical)
     }
 };
 

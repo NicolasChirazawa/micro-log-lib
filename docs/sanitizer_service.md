@@ -52,7 +52,7 @@ Input: '[SENSITIVE DATA]'
 
 ### sanitize()
 
-Responsável pela sanitização dos dados de objetos.
+Responsável pela sanitização dos dados dos logs.
 
 Características:
 
@@ -61,7 +61,7 @@ Características:
 - Sanitização compatível com múltiplos níveis de profundidade construído com recursivdade;
 
 ```ts
-static sanitizeData(data) {
+static sanitize(data) {
   let keys = Object.keys(data);
   // [...]
   return data;

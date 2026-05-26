@@ -159,7 +159,7 @@ const sensitiveFields = [
   'password'
 ];
 
-SanitizerService.updateSanitizeFields(sensitiveFields);
+SanitizerService.addFields(sensitiveFields);
 
 SanitizerService.updateRedactValue(
   '[SENSITIVE DATA]'
@@ -174,7 +174,7 @@ SanitizerService.updateRedactValue(
 ```js
 const { LoggerService, SanitizerService } = require('micro-log-lib');
 
-SanitizerService.updateSanitizeFields([
+SanitizerService.addFields([
   'password'
 ]);
 

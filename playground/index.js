@@ -17,7 +17,7 @@ class ServicoTeste_2 {
     
     static novaOperacao() {
         let objeto = ['objeto', 'legal', 'bacana'];
-        SanitizerService.updateSanitizeFields(objeto);
+        SanitizerService.addFields(objeto);
     }
 };
 

@@ -133,7 +133,7 @@ fatal() {
 Responsável pelo `output` JSON e console.log() dos logs.
 
 ```ts
-output(data, outputMethod) {
+#output(data, outputMethod) {
   if (outputMethod === 'LOG' || outputMethod === 'BOTH') { /*... */ }
   // [...]
   return;

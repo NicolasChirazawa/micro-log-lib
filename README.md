@@ -44,7 +44,7 @@ npm install micro-log-lib
 ```js
 const { LoggerService } = require('micro-log-lib');
 
-// LoggerService.{level}(message, data?, context?)
+// LoggerService.{level}(message, data?, service?)
 
 LoggerService.info(
   'Usuário autenticado',
@@ -118,24 +118,25 @@ logger.info('Servidor iniciado na porta 3000');
 ### LOG
 
 ```txt
-[INFO] Usuário autenticado
+[INFO] [AuthService] Usuário autenticado
+UUID: cf35f8e0dbf4813a5259
 ```
 
 ### JSON
 
 ```json
 {
+  "uuid": "cf35f8e0dbf4813a5259",
+  "timestamp": "2026-05-25T22:14:10.120Z",
   "level": "INFO",
   "message": "Usuário autenticado",
-  "context": "AuthService"
+  "service": "AuthService"
 }
 ```
 
 </details>
 
----
-
-## SanitizerService
+### SanitizerService
 
 O `SanitizerService` aplica configurações globais, afetando todos os logs da aplicação independentemente da instância utilizada.
 
@@ -199,7 +200,86 @@ Output:
 
 <h2 name="documentacao">Documentação</h2>
 
-## Serviços principais
+### _Serviços principais_
+
+### LoggerService
+
+Responsável pela geração de loggers estruturados.
+
+<details>
+<summary>Documentação de atributos e métodos</summary>
+
+## Atributos
+
+- `valid`
+  - Objeto de validação para configuração da classe `LoggerService`
+
+- `colors`
+  - Objeto com as cores disponíveis para os logs
+
+- `config`
+   - Campo de configuração da instância da classe `LoggerService`
+
+## Métodos
+
+#### constructor()
+
+Instância para gerar uma nova configuração do `LoggerService`.
+
+```ts
+constructor(options = {}) {
+    this.validate(options);
+    // [...]
+    this.#config = merged;
+}
+```
+
+#### validate()
+
+Validação da configuração gerada para o `LoggerService`.
+
+```ts
+validate(options) {
+  const keys_options = Object.keys(options);
+  // [...]
+}
+```
+
+#### log()
+
+Função fundamental do sistema que realiza toda a base do projeto
+
+```ts
+log(type, message, data = null, service = null, uuid = null) {
+  type = NormalizeService.upper(type);
+  // [...]
+  return logData || uuid;
+}
+```
+
+#### debug() / info() / warn() / error() / critical()
+
+Métodos utilitários para registrar logs por nível.
+
+```ts
+debug/info/warn/error/critical(options) {
+  return this.{level}({level}, message, data, service, uuid);
+}
+```
+
+#### output()
+
+Responsável pelo `output` JSON e console.log() dos logs.
+
+```ts
+output(data, outputMethod) {
+    if (outputMethod === 'LOG' || outputMethod === 'BOTH') {
+    // [...]
+    return;
+}
+```
+ 
+</details>
 
 ### SanitizerService
 
@@ -220,7 +300,7 @@ Responsável por sanitizar campos sensíveis de objetos JSON com base nas chaves
 
 ## Métodos
 
-### updateSanitizeFields()
+#### updateSanitizeFields()
 
 Atualiza os campos que devem ser sanitizados.
 
@@ -241,9 +321,7 @@ Exemplo de input:
 ]
 ```
 
----
-
-### updateRedactValue()
+#### updateRedactValue()
 
 Atualiza o valor utilizado para substituir os campos sensíveis.
 
@@ -262,16 +340,16 @@ Exemplo de input:
 
 ---
 
-### sanitizeData()
+#### sanitizeData()
 
 Função responsável pela sanitização dos dados.
 
 Características:
 
-- Sanitização baseada nas chaves do objeto
-- Comparação case insensitive
-- Sanitização recursiva
-- Compatível com múltiplos níveis de profundidade
+- Sanitização baseada nas chaves do objeto;
+- Comparação case insensitive;
+- Sanitização recursiva;
+- Compatível com múltiplos níveis de profundidade;
 
 ```ts
 static sanitizeData(data) {
@@ -309,7 +387,7 @@ Exemplo de output:
 
 ---
 
-## Serviços auxiliares
+### _Serviços auxiliares_
 
 ### NormalizeService
 
@@ -320,7 +398,7 @@ Responsável pela padronização de strings entre os serviços internos.
 
 ## Métodos
 
-### upper()
+#### upper()
 
 Converte uma string para letras maiúsculas.
 
@@ -342,9 +420,7 @@ Exemplo de output:
 'TEXTO EXEMPLO'
 ```
 
----
-
-### lower()
+#### lower()
 
 Converte uma string para letras minúsculas.
 
@@ -368,7 +444,6 @@ Exemplo de output:
 
 </details>
 
----
 
 ### UUIDService
 
@@ -379,7 +454,7 @@ Responsável pela geração de UUIDs utilizados internamente pela biblioteca.
 
 ## Métodos
 
-### generate()
+#### generate()
 
 Cria e retorna uma substring UUID sem hífens contendo 20 caracteres.
 

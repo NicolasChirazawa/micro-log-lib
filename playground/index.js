@@ -1,24 +1,17 @@
 const { LoggerService } = require('../lib/core/logger_service');
 const { SanitizerService } = require('../lib/core/sanitizer_service');
+const { FormatterService } = require('../lib/core/formatter_service');
 
 class ServicoTeste {
     static #name = "ServicoTeste";
 
-    static testarOperacao() {
-        const options = { colorize: true, 'teste': 'legal', outputMode: 'BOTH', type: { 'ERROR': 'RED' } };
+    static testar() {
+        const options = { colorize: true, 'teste': 'legal', outputMode: 'LOG', type: { 'FATAL': 'RED' } };
         const teste_2 = new LoggerService(options);
 
-        console.log(teste_2.critical)
+        teste_2.fatal("teste", {nome: "falar"}, ServicoTeste);
     }
 };
 
-class ServicoTeste_2 {
-    #name = "ServicoTeste_2";
-    
-    static novaOperacao() {
-        let objeto = ['objeto', 'legal', 'bacana'];
-        SanitizerService.addFields(objeto);
-    }
-};
 
-ServicoTeste.testarOperacao();
+ServicoTeste.testar();

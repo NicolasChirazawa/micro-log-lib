@@ -228,6 +228,8 @@ constructor(options = {}) {
 }
 ```
 
+---
+
 #### debug()
 
 Usado para receber diagnósticos detalhados sobre o sistema à desenvolvedores dentro do ambiente de teste.
@@ -243,6 +245,8 @@ debug() {
   return this.debug('DEBUG', message, data, service, uuid);
 }
 ```
+
+---
 
 #### info()
 
@@ -260,6 +264,8 @@ info() {
 }
 ```
 
+---
+
 #### warn()
 
 Situação inesperada mas que não interrompe um fluxo, entretanto, requerem atenção 
@@ -276,6 +282,8 @@ warn() {
 }
 ```
 
+---
+
 #### error()
 
 Interrompimento do fluxo de uma operação.
@@ -290,6 +298,8 @@ error() {
   return this.warn('WARN', message, data, service, uuid);
 }
 ```
+
+---
 
 #### fatal()
 
@@ -307,8 +317,6 @@ fatal() {
 ```
  
 </details>
-
----
 
 ### SanitizerService
 
@@ -347,6 +355,8 @@ Input:
   'refresh-token'
 ]
 
+---
+
 #### updateRedactValue()
 
 Atualiza o valor utilizado para substituir os campos sensíveis.
@@ -362,6 +372,8 @@ static updateRedactValue(text: string): void {
 ```
 
 Input: '[SENSITIVE DATA]'
+
+---
 
 #### sanitize()
 

@@ -30,12 +30,13 @@ npm install micro-log-lib
 
 <h2 name="funcionalidades">Funcionalidades</h2>
 
-- **Níveis de log** — `debug`, `info`, `warn` e `error`;
+- **Níveis de log** — `debug`, `info`, `warn`, `error` e `fatal`;
 - **Output flexível** — `LOG`, `JSON` ou ambos (`BOTH`);
 - **Cores customizáveis** — configuráveis por nível de log;
 - **Sanitização automática** — ocultação de dados sensíveis;
 - **Rastreabilidade** — geração automática de UUID;
-- **Configuração por instância** — diferentes comportamentos por contexto;
+- **Configuração por instância** — diferentes comportamentos por contexto ao `LoggerService`;
+- **Formatação de logs personalizada** — template de logs personalizável;
 
 ---
 
@@ -68,6 +69,12 @@ LoggerService.error(
   'Falha ao processar pagamento',
   { code: 500 },
   'PaymentService'
+);
+
+LoggerService.fatal(
+  'Estouro de limite de memória',
+  { code: 500 },
+  'ProcessService'
 );
 ```
 
@@ -168,32 +175,26 @@ SanitizerService.updateRedactValue(
 
 </details>
 
+</details>
+
+---
+
+### FormatterService
+
+O `FormatterService` aplica configurações globais, afetando todos os logs da aplicação independentemente da instância utilizada.
+
 <details>
-<summary>Exemplo de sanitização integrada</summary>
+<summary>Atributos e exemplo de implementação</summary>
+
+| Opção | Tipo | Descrição |
+|---|---|---|
+| `format` | `string` | Template em texto para ser usado pelo log |
 
 ```js
-const { LoggerService, SanitizerService } = require('micro-log-lib');
+const { FormatterService } = require('micro-log-lib');
 
-SanitizerService.addFields([
-  'password'
-]);
-
-LoggerService.info(
-  'Login realizado',
-  {
-    email: 'user@email.com',
-    password: '123456'
-  }
-);
-```
-
-Output:
-
-```json
-{
-  "email": "user@email.com",
-  "password": "[SENSITIVE DATA]"
-}
+const template = '[${timestamp}] [${id}] [${type} - ${service}] ${message}';
+FormatterService.set(template);
 ```
 
 </details>
@@ -420,3 +421,88 @@ Output:
 ##### *Supondo que os campos do sanitizer fields são: 'password' e 'phone'
 
 </details>
+
+### FormatterService
+
+Responsável pela formatação personalizada dos logs.
+
+<details>
+<summary>Documentação de atributos e métodos</summary>
+
+### Atributo(s)
+
+- `format`
+  - Formatação personalizada do log;
+
+### Método(s)
+
+#### set format()
+
+Estrutura um novo template ao format.
+
+- Método estático, logo, aplica-se independentemente da instância;
+
+```ts
+static set format(template) {
+    this.#format = template;
+}
+```
+
+Input: '[${timestamp}] [${id}] [${type} - ${service}] ${message}';
+
+---
+
+#### get format()
+
+Recupera o valor atual do #format no 'FormatterService'.
+
+Características:
+- Método estático, logo, aplica-se independentemente da instância;
+
+```ts
+static get format() {
+    return this.#format;
+}
+```
+
+Output: '[${timestamp}] [${id}] [${type} - ${service}] ${message}';
+
+---
+
+#### transformTemplateToLog()
+
+Baseado no objeto do log, utiliza-se do template para gerar a mensagem personalizada do log.
+
+Características:
+
+- Transformação do template em um log com valores reais;
+
+```ts
+static transformTemplateToLog(body) {
+    const format = this.#format;
+    // [...]
+    return log;
+}
+```
+
+Input:
+
+```json
+{
+  "type": "FATAL",
+  "message": "teste",
+  "data": {
+    "nome": "falar"
+  },
+  "service": "ServicoTeste"
+}
+```
+
+Output:
+
+```bash
+[2026-05-28T02:49:34.012Z] [e5f1510eaf3b45e2b7d3] [FATAL - ServicoTeste] teste
+```
+
+</details>
+

@@ -20,10 +20,14 @@ Responsável pela geração de loggers estruturados.
 Método para evocar uma instância da classe `LoggerService` com a possibilidade de implementar uma nova configuração.
 
 ```ts
-constructor(options = {}) {
+constructor({
+      sanitizer = SanitizerService,
+      formatter = FormatterService,
+      options   = {},
+    } = {}) {
     this.validate(options);
     // [...]
-    this.#config = merged;
+    this.context = {}; 
 }
 ```
 

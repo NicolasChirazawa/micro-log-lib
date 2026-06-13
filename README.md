@@ -32,7 +32,7 @@ npm install micro-log-lib
 
 - **Níveis de log** — `debug`, `info`, `warn`, `error` e `fatal`;
 - **Output flexível** — `LOG`, `JSON` ou ambos (`BOTH`);
-- **Cores customizáveis** — configuráveis por nível de log;
+- **Código simplificado via helper** — Evocação de `child`;
 - **Sanitização automática** — ocultação de dados sensíveis;
 - **Rastreabilidade** — geração automática de UUID;
 - **Configuração por instância** — diferentes comportamentos por contexto ao `LoggerService`;
@@ -243,7 +243,7 @@ Exemplo: ("SELECT 23+ users from database", users);
 
 ```ts
 debug() {
-  return this.debug('DEBUG', message, data, service, uuid);
+  return this.debug('DEBUG', message, data, service_name, uuid);
 }
 ```
 
@@ -261,7 +261,7 @@ Exemplo: ("User login successful:", username)
 
 ```ts
 info() {
-  return this.info('INFO', message, data, service, uuid);
+  return this.info('INFO', message, data, service_name, uuid);
 }
 ```
 
@@ -279,7 +279,7 @@ Exemplo: ("CPU has achivied 85% of memory")
 
 ```ts
 warn() {
-  return this.warn('WARN', message, data, service, uuid);
+  return this.warn('WARN', message, data, service_name, uuid);
 }
 ```
 
@@ -296,7 +296,7 @@ Exemplo: ("User not found on DB")
 
 ```ts
 error() {
-  return this.warn('WARN', message, data, service, uuid);
+  return this.warn('WARN', message, data, service_name, uuid);
 }
 ```
 
@@ -313,11 +313,24 @@ Exemplo: ("Memory usage exceeds max")
 
 ```ts
 fatal() {
-  return this.warn('FATAL', message, data, service, uuid);
+  return this.warn('FATAL', message, data, service_name, uuid);
 }
 ```
  
 </details>
+
+#### child()
+
+Função responsável para ser um 'helper'.
+
+- 'Helper' para limpar o 'código;
+- Evoca nova classe baseada na possibilidade de um singleton;
+
+```ts
+child() {
+  return this.child();
+}
+```
 
 ### SanitizerService
 

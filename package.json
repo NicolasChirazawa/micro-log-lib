@@ -12,8 +12,8 @@
   "type": "commonjs",
   "sideEffects": false,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "node playground/index.js"
+    "test": "node --test",
+    "start:dev": "node playground/playground.js"
   },
   "repository": {
     "type": "git",

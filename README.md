@@ -31,8 +31,8 @@ npm install micro-log-lib
 <h2 name="funcionalidades">Funcionalidades</h2>
 
 - **Níveis de log** — `debug`, `info`, `warn`, `error` e `fatal`;
-- **Output flexível** — `LOG`, `JSON` ou ambos (`BOTH`);
-- **Código simplificado via helper** — Evocação de `child`;
+- **Output flexível** — `LOG`, `JSON` e `BOTH`;
+- **Código limpo** — evocação de `child` para atributos comuns entre logs;
 - **Sanitização automática** — ocultação de dados sensíveis;
 - **Rastreabilidade** — geração automática de UUID;
 - **Configuração por instância** — diferentes comportamentos por contexto ao `LoggerService`;
@@ -74,6 +74,11 @@ LoggerService.error(
 LoggerService.fatal(
   'Estouro de limite de memória',
   { code: 500 },
+  'ProcessService'
+);
+
+LoggerService.child(
+  { user_id: '12342334' },
   'ProcessService'
 );
 ```
@@ -317,20 +322,20 @@ fatal() {
 }
 ```
  
-</details>
+ #### child()
 
-#### child()
+'Helper' responsável para simplificar a chamada de loggers.
 
-Função responsável para ser um 'helper'.
-
-- 'Helper' para limpar o 'código;
-- Evoca nova classe baseada na possibilidade de um singleton;
+- Simplifica a verborragia do código;
 
 ```ts
 child() {
   return this.child();
 }
 ```
+
+</details>
+
 
 ### SanitizerService
 

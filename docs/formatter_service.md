@@ -41,7 +41,7 @@ static get format(): string {
 }
 ```
 
-#### transformTemplateToLog()
+### transformTemplateToLog()
 
 Método que faz a construção do texto do log utilizando o template e o objeto do log.
 
@@ -53,7 +53,7 @@ static transformTemplateToLog(body) {
 }
 ```
 
-#### Private getValueFromPath()
+### #getValueFromPath()
 
 Método que baseado no texto do objeto, captura o valor através de um loop baseado nas chaves.
 

@@ -14,7 +14,7 @@ Serviço responsável pela sanitização de campos sensíveis de objetos JSON.
 
 ## Métodos
 
-### addFields()
+### addSanitizeFields()
 
 Adiciona campos personalizados que também devem ser sanitizados.
 
@@ -33,6 +33,42 @@ Input:
   'access-token',
   'refresh-token'
 ]
+
+### getSanitizeFields()
+
+Recupera os valores da lista de sanitização.
+
+- Método estático, logo, aplica-se independentemente da instância;
+
+```ts
+static getSanitizeFields(): Record<string, boolean> {
+  return this.#sanitizeFields;
+};
+```
+
+### resetSanitizeFields()
+
+Reseta os valores de sanitização padrão do serviço de sanitização.
+
+- Usando para realizar testes;
+
+```ts
+static getSanitizeFields(): Record<string, boolean> {
+  return this.#sanitizeFields;
+};
+```
+
+### getRedactValue()
+
+Recolhe o valor de substituição do serviço de sanitização.
+
+- Verifica o valor de sanitização;
+
+```ts
+static getRedactValue(): string {
+  return this.#sanitizeFields;
+};
+```
 
 ### updateRedactValue()
 
@@ -82,8 +118,6 @@ Input:
 
 Output:
 
-(Supondo que os campos do sanitizer fields são: 'password' e 'phone')
-
 ```json
 {
   "email": "teste@gmail.com",
@@ -93,3 +127,5 @@ Output:
   }
 }
 ```
+
+(Supondo que os campos do sanitizer fields são: 'password' e 'phone').

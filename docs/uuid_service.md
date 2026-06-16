@@ -16,4 +16,6 @@ static generate(): string {
 }
 ```
 
+```bash
 Output: cf35f8e0dbf4813a5259
+```

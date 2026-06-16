@@ -45,6 +45,11 @@ npm install micro-log-lib
 ```js
 const { LoggerService } = require('micro-log-lib');
 
+LoggerService.child(
+  { user_id: '12342334' },
+  'ProcessService'
+);
+
 // LoggerService.{level}(message, data?, service?)
 
 LoggerService.info(
@@ -74,11 +79,6 @@ LoggerService.error(
 LoggerService.fatal(
   'Estouro de limite de memória',
   { code: 500 },
-  'ProcessService'
-);
-
-LoggerService.child(
-  { user_id: '12342334' },
   'ProcessService'
 );
 ```

@@ -20,19 +20,17 @@ class ServicoTeste {
             data: {
                 'valor': 2,
             },
-            service_name: ServicoTeste.#name
-        };        
+            serviceName: ServicoTeste.#name
+        };
         const logger_child = logger.child(logMeta);
 
         const logMeta_2 = {
             data: {
                 'token': 3,
             },
-            service_name: ServicoTeste.#name
+            serviceName: ServicoTeste.#name
         };
         const logger_child_child = logger_child.child(logMeta_2);
-        
-        console.log(logger_child_child)
 
         let valor = logger_child_child.fatal(
             'Teste', 

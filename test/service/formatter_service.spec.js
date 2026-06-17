@@ -36,9 +36,7 @@ describe('FormatterService Class', async () => {
 
             assert.throws(() => {
                 FormatterService.format = newFormat
-            },
-                TypeError,
-            );
+            }, TypeError );
         });
     });
 

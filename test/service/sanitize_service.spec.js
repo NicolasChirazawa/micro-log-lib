@@ -4,7 +4,7 @@ const { test, describe, it, beforeEach } = require('node:test');
 const { SanitizerService } = require('../../lib/core/sanitizer_service');
 
 describe('SanitizeService Class', async () => {
-    let fields = SanitizerService.getSanitizeFields();
+    let fields = new SanitizerService().getSanitizeFields();
     const standartFields = { 
         password: true, 
         senha: true, 
@@ -20,8 +20,9 @@ describe('SanitizeService Class', async () => {
         await test('Add new field using a "String" into the "SanitizerField"', () => {
            
             const newField = 'campo';
-            SanitizerService.addSanitizeFields(newField);
-            const result = SanitizerService.getSanitizeFields();
+            const newSanitizerService = new SanitizerService();
+            newSanitizerService.addSanitizeFields(newField);
+            const result = newSanitizerService.getSanitizeFields();
 
             const output = { ...fields };    
             output[newField] = true;       
@@ -34,8 +35,10 @@ describe('SanitizeService Class', async () => {
 
         await test('Add new fields using an "Array" into the "SanitizerField"', () => {
             const newField = ['teste_1', 'teste_2', 'teste_3'];
-            SanitizerService.addSanitizeFields(newField);
-            const result = SanitizerService.getSanitizeFields();
+            const newSanitizerService = new SanitizerService();
+
+            newSanitizerService.addSanitizeFields(newField);
+            const result = newSanitizerService.getSanitizeFields();
 
             const output = { ...fields };
             
@@ -53,7 +56,7 @@ describe('SanitizeService Class', async () => {
             const newField = 2;
 
             assert.throws(() => {
-                SanitizerService.addSanitizeFields(newField);
+                new SanitizerService().addSanitizeFields(newField);
             }, TypeError)
         });
 
@@ -61,15 +64,16 @@ describe('SanitizeService Class', async () => {
             const newField = ["valor", 1];
 
             assert.throws(() => {
-                SanitizerService.addSanitizeFields(newField);
+                new SanitizerService().addSanitizeFields(newField);
             }, TypeError)
         });
     });
 
     await it('"getSanitizeFields" method', async () => {
         await test('Get the SanitizeFields', () => {
-            SanitizerService.resetSanitizeFields();
-            const result = SanitizerService.getSanitizeFields();
+            const newSanitizerService = new SanitizerService();
+            newSanitizerService.resetSanitizeFields();
+            const result = newSanitizerService.getSanitizeFields();
 
             assert.deepEqual(
                 result,
@@ -81,11 +85,12 @@ describe('SanitizeService Class', async () => {
     await it('"resetSanitizeFields" method', async () => {
         await test('Get the standart "SanitizeFields"', () => {
             const newFields = ["valor_1", "valor_2", "valor_3"];
+            const newSanitizerService = new SanitizerService();
             
-            SanitizerService.addSanitizeFields(newFields);
-            SanitizerService.resetSanitizeFields();
+            newSanitizerService.addSanitizeFields(newFields);
+            newSanitizerService.resetSanitizeFields();
 
-            const result = SanitizerService.getSanitizeFields();
+            const result = newSanitizerService.getSanitizeFields();
 
             assert.deepEqual(
                 result,
@@ -97,9 +102,10 @@ describe('SanitizeService Class', async () => {
     await it('"updateRedactValue" method', async () => {
         await test('Update the "redact value" field', () => {
             const output = "*Censurado*";
-            
-            SanitizerService.updateRedactValue(output);
-            const result = SanitizerService.getRedactValue();
+            const newSanitizerService = new SanitizerService();
+
+            newSanitizerService.updateRedactValue(output);
+            const result = newSanitizerService.getRedactValue();
 
             assert.deepEqual(
                 result,
@@ -111,7 +117,7 @@ describe('SanitizeService Class', async () => {
             const output = 1234;
             
             assert.throws(() => {
-                 SanitizerService.updateRedactValue(output);
+                new SanitizerService().updateRedactValue(output);
             }, TypeError,
             );
         });
@@ -119,8 +125,9 @@ describe('SanitizeService Class', async () => {
 
     await it('"getRedactValue" method', async () => {
         await test('Get the "redact value" field', () => {            
-            SanitizerService.updateRedactValue(standartCensorship);
-            const result = SanitizerService.getRedactValue();
+            const newSanitizerService = new SanitizerService();
+            newSanitizerService.updateRedactValue(standartCensorship);
+            const result = newSanitizerService.getRedactValue();
 
             assert.deepEqual(
                 result,
@@ -130,8 +137,9 @@ describe('SanitizeService Class', async () => {
     });
 
     await it('"sanitize" method', async () => {
-        await test('Get the object sanitized', () => {            
-            SanitizerService.updateRedactValue(standartCensorship)
+        await test('Get the object sanitized', () => {    
+            const newSanitizerService = new SanitizerService();        
+            newSanitizerService.updateRedactValue(standartCensorship)
             
             const object_input = {
                 "password": "NomeDiferente123@",
@@ -141,7 +149,7 @@ describe('SanitizeService Class', async () => {
                 "token": "AIWU37G3YG",
             }
                 
-            const result = SanitizerService.sanitize(object_input)
+            const result = newSanitizerService.sanitize(object_input)
             const object_output = {
                 "password": standartCensorship,
                 "pass": true,

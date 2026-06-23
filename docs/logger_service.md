@@ -21,8 +21,9 @@ Método para evocar uma instância da classe `LoggerService` com a possibilidade
 
 ```ts
 constructor({
-      sanitizer = SanitizerService,
-      formatter = FormatterService,
+      sanitizer = new SanitizerService(),
+      formatter = new FormatterService(),
+      context   = new ContextService(),
       options   = {},
     } = {}) {
     this.validate(options);
@@ -31,7 +32,7 @@ constructor({
 }
 ```
 
-#### Private validate()
+### Private validate()
 
 Método privado para a validação da configuração gerada para o `LoggerService`.
 
@@ -42,7 +43,7 @@ Método privado para a validação da configuração gerada para o `LoggerServic
 }
 ```
 
-#### Private log()
+### Private log()
 
 Método privado que centraliza a chamada dos diferentes níveis de logs.
 
@@ -54,7 +55,7 @@ Método privado que centraliza a chamada dos diferentes níveis de logs.
 }
 ```
 
-#### debug()
+### debug()
 
 Usado para receber diagnósticos detalhados sobre o sistema à desenvolvedores dentro do ambiente de teste.
 
@@ -70,7 +71,7 @@ debug() {
 }
 ```
 
-#### info()
+### info()
 
 Eventos gerais do sistema, uma confirmação se o sistema funciona corretamente
 
@@ -86,7 +87,7 @@ info() {
 }
 ```
 
-#### warn()
+### warn()
 
 Situação inesperada mas que não interrompe um fluxo, entretanto, requerem atenção 
 
@@ -102,7 +103,7 @@ warn() {
 }
 ```
 
-#### error()
+### error()
 
 Interrompimento do fluxo de uma operação.
 
@@ -117,7 +118,7 @@ error() {
 }
 ```
 
-#### fatal()
+### fatal()
 
 Erro que leva ao encerramento da aplicação.
 
@@ -132,7 +133,7 @@ fatal() {
 }
 ```
 
-#### Private output()
+### Private output()
 
 Responsável pelo `output` JSON e console.log() dos logs.
 
@@ -141,5 +142,22 @@ Responsável pelo `output` JSON e console.log() dos logs.
   if (outputMethod === 'LOG' || outputMethod === 'BOTH') { /*... */ }
   // [...]
   return;
+}
+```
+
+### child()
+
+Método responsável pela invocação de um 'LoggerService' herdando dos atributos do seu pai.
+
+- Herda o constructor do 'LoggerService' pai, ou seja, 'sanitizer', 'formatter' etc..
+- Cria um contexto para simplificar a evocação de logs com dados comuns entre eles;
+- Retorna uma nova instância de classe do 'LoggerService';
+
+```ts
+child({data = null: Object, serviceName = '': string}) {
+  serviceName =
+      serviceName ? serviceName : 'UNKNOWN SERVICE';
+  // [...]
+  return loggerChild;
 }
 ```

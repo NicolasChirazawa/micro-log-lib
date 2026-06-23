@@ -15,7 +15,7 @@ static generate(): string {
     .slice(0, 20);
 }
 ```
-
-```bash
-Output: cf35f8e0dbf4813a5259
+Output: 
+```json
+"cf35f8e0dbf4813a5259"
 ```

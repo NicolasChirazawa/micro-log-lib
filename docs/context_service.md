@@ -20,7 +20,7 @@ create(data, serviceName, context) {
 };
 ```
 
-### #validateCreateContext()
+### Private validateCreateContext()
 
 Realiza a validação dos parâmetros usados para a criação de contexto na instância do 'contextService'.
 

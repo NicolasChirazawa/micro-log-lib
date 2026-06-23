@@ -4,11 +4,11 @@ Serviço responsável pela sanitização de campos sensíveis de objetos JSON.
 
 ## Atributos
 
-- `sanitizeFields`
-  - Objeto que possui os campos a serem sanitizados
+- `#sanitizeFields`
+  - Objeto que possui os parâmetros a serem sanitizados.
 
-- `redactValue`
-  - Valor substituto utilizado na sanitização
+- `#redactValue`
+  - Valor de omissão utilizado no serviço de sanitização.
 
 ---
 
@@ -16,75 +16,67 @@ Serviço responsável pela sanitização de campos sensíveis de objetos JSON.
 
 ### addSanitizeFields()
 
-Adiciona campos personalizados que também devem ser sanitizados.
-
-- Método estático, logo, aplica-se independentemente da instância;
+Adiciona campos personalizados a lista dos parâmetros que devem ser sanitizados.
 
 ```ts
-static updateSanitizeFields(option: string[]): void {
+addSanitizeFields(option: string | string[]): void {
   // [...]
-  SanitizerService.#sanitizeFields = merge;
+  this.#sanitizeFields = merge;
 }
 ```
 
 Input:
-[
-  'password',
-  'access-token',
-  'refresh-token'
-]
+```json
+[ 'password', 'access-token', 'refresh-token' ]
+```
 
 ### getSanitizeFields()
 
-Recupera os valores da lista de sanitização.
-
-- Método estático, logo, aplica-se independentemente da instância;
+Recupera os parâmetros da lista de sanitização.
 
 ```ts
-static getSanitizeFields(): Record<string, boolean> {
+getSanitizeFields(): Record<string, boolean> {
   return this.#sanitizeFields;
 };
 ```
 
 ### resetSanitizeFields()
 
-Reseta os valores de sanitização padrão do serviço de sanitização.
+Reseta os parâmetros padrões do serviço de sanitização.
 
 - Usando para realizar testes;
 
 ```ts
-static getSanitizeFields(): Record<string, boolean> {
+resetSanitizeFields(): Record<string, boolean> {
   return this.#sanitizeFields;
 };
 ```
 
 ### getRedactValue()
 
-Recolhe o valor de substituição do serviço de sanitização.
-
-- Verifica o valor de sanitização;
+Recupera o valor de omissão usado naquela instância do serviço de sanitização.
 
 ```ts
-static getRedactValue(): string {
+getRedactValue(): string {
   return this.#sanitizeFields;
 };
 ```
 
 ### updateRedactValue()
 
-Atualiza o valor utilizado para substituir os campos sensíveis.
-
-Características:
-- Método estático, logo, aplica-se independentemente da instância;
+Atualiza o valor de omissão usado naquela instância do serviço de sanitização.
 
 ```ts
-static updateRedactValue(text: string): void {
+updateRedactValue(text: string): void {
   // [...]
-  SanitizerService.redactValue = value;
+  this.redactValue = value;
 }
 ```
 
-Input: '[SENSITIVE DATA]'
+Input:
+```json
+[SENSITIVE DATA]
+```
 
 ### sanitize()
 
@@ -93,11 +85,11 @@ Responsável pela sanitização dos dados dos logs.
 Características:
 
 - Sanitização baseada nas chaves do objeto;
-- As chaves são case insensitive;
-- Sanitização compatível com múltiplos níveis de profundidade construído com recursivdade;
+- As chaves são "insensitive case";
+- Sanitização compatível com múltiplos níveis de profundidade construído em cima de recursivdade;
 
 ```ts
-static sanitize(data) {
+sanitize(data) {
   let keys = Object.keys(data);
   // [...]
   return data;
@@ -105,7 +97,6 @@ static sanitize(data) {
 ```
 
 Input:
-
 ```json
 {
   "email": "teste@gmail.com",
@@ -116,8 +107,9 @@ Input:
 }
 ```
 
-Output:
+* (Supondo que os campos do sanitizer fields são: 'password' e 'phone').
 
+Output:
 ```json
 {
   "email": "teste@gmail.com",
@@ -127,5 +119,3 @@ Output:
   }
 }
 ```
-
-(Supondo que os campos do sanitizer fields são: 'password' e 'phone').

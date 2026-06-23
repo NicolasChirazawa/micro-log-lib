@@ -1,10 +1,10 @@
 # FormatterService
 
-Responsável pela formatação de logs.
+Responsável pela formatação customizável dos logs.
 
 ## Particularidade de implementação
 
-O funcionamento do '#format' funciona da seguinte forma:
+O funcionamento do '#format' segue a seguinte lógica:
 
 Exemplo: `[${timestamp}] [${id}] [${type} - ${service}] ${message}`.
 
@@ -13,11 +13,12 @@ Para capturar valores do logs no template, basta aplicar a busca através da sin
 `${chave_do_log.chave_aninhada...}`
 
 * É possível capturar qualquer nível de profundidade dum objeto.
+** Se o objeto não existir, indiferente de onde seja o nível, é retornado "undefined"
 
 ## Atributos
 
 - `format`
-  - Template de texto para utilização de logs personalizados.
+  - Template de texto para construção de logs personalizados.
 
 ## Métodos
 
@@ -26,39 +27,39 @@ Para capturar valores do logs no template, basta aplicar a busca através da sin
 Método para settar um novo template para a classe `FormatterService`.
 
 ```ts
-static set format(template: string): void {
+set format(template: string): void {
     this.#format = template;
 }
 ```
 
 ### get format()
 
-Método para recuperar o '#format' da classe `FormatterService`.
+Método para recuperar o '#format' da instância da classe `FormatterService`.
 
 ```ts
-static get format(): string {
+get format(): string {
     return this.#format;
 }
 ```
 
 ### transformTemplateToLog()
 
-Método que faz a construção do texto do log utilizando o template e o objeto do log.
+Método responsável pela construção do texto do log customizável utilizando do template definido e o corpo do log.
 
 ```ts
-static transformTemplateToLog(body) {
+transformTemplateToLog(body) {
     const format = this.#format;
     // [...]
     return log;
 }
 ```
 
-### #getValueFromPath()
+### Private getValueFromPath()
 
-Método que baseado no texto do objeto, captura o valor através de um loop baseado nas chaves.
+Método que baseado no corpo do objeto, através de um loop recursivo, captura o valor de uma chave.
 
 ```ts
-static #getValueFromPath(body, object_value_text) {
+#getValueFromPath(body, object_value_text) {
     const cleanNameObject = object_value_text.slice(2, object_value_text.length - 1);
     // [...]
     return value;

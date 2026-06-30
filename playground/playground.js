@@ -1,6 +1,7 @@
 const { LoggerService } = require('../lib/core/logger_service');
 const { SanitizerService } = require('../lib/core/sanitizer_service');
 const { FormatterService } = require('../lib/core/formatter_service');
+const { ContextService } = require('../lib/core/context_service');
 
 class ServicoTeste {
     #name;
@@ -49,3 +50,19 @@ class ServicoTeste {
     }
     */
 };
+
+const contextTeste = new ContextService();
+const censorship = {
+    token: true,
+    password: true,
+};
+const censorship_2 = {
+    password: {
+        password_2: true,
+    },
+};
+const censorship_3 = {
+    senha: true,
+}
+contextTeste.create(censorship)
+contextTeste.create(censorship_2);

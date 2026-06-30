@@ -3,8 +3,12 @@ const { SanitizerService } = require('../lib/core/sanitizer_service');
 const { FormatterService } = require('../lib/core/formatter_service');
 
 class ServicoTeste {
-    static #name = "ServicoTeste";
+    #name;
 
+    constructor(name) {
+        this.#name = name;
+    }
+    /*
     static testar() {
         const options = { 
             colorize: true, 
@@ -38,6 +42,10 @@ class ServicoTeste {
         );
         console.log(valor);
     }
-};
 
-ServicoTeste.testar();
+    static testar_2() {
+        const LogTeste = new LoggerService();
+        LogTeste.info({'teste': 'invalido'}, 'ababa')
+    }
+    */
+};

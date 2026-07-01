@@ -12,8 +12,8 @@ Para capturar valores do logs no template, basta aplicar a busca através da sin
 
 `${chave_do_log.chave_aninhada...}`
 
-* É possível capturar qualquer nível de profundidade dum objeto.
-** Se o objeto não existir, indiferente de onde seja o nível, é retornado "undefined"
+* É possível capturar qualquer nível de profundidade dum objeto;
+** Se o objeto não existir, indiferente de onde seja o nível, é retornado "undefined";
 
 ## Atributos
 
@@ -64,4 +64,14 @@ Método que baseado no corpo do objeto, através de um loop recursivo, captura o
     // [...]
     return value;
 }
+```
+
+### clone()
+
+Retorna uma nova instância do 'FormatterService' herdando os parâmetros do pai.
+
+```ts
+clone(): Object {
+    return new FormatterService(this.#formatField);
+};
 ```

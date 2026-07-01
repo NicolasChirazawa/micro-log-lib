@@ -37,21 +37,9 @@ constructor({
 Método privado para a validação da configuração gerada para o `LoggerService`.
 
 ```ts
-#validate(options) {
+#validateInstance(options) {
   const keys_options = Object.keys(options);
   // [...]
-}
-```
-
-### Private log()
-
-Método privado que centraliza a chamada dos diferentes níveis de logs.
-
-```ts
-#log(type, message, data = null, service = null, uuid = null) {
-  type = NormalizeService.upper(type);
-  // [...]
-  return logData || uuid;
 }
 ```
 
@@ -66,8 +54,8 @@ Casos comuns:
 Exemplo: ("SELECT 23+ users from database", users);
 
 ```ts
-debug() {
-  return this.debug('DEBUG', message, data, service, uuid);
+debug(message, fields) {
+  return this.#log('DEBUG', message, fields);
 }
 ```
 
@@ -82,8 +70,8 @@ Casos comuns:
 Exemplo: ("User login successful:", username)
 
 ```ts
-info() {
-  return this.info('INFO', message, data, service, uuid);
+info(message, fields) {
+  return this.#log('INFO', message, fields);
 }
 ```
 
@@ -98,8 +86,8 @@ Casos comuns:
 Exemplo: ("CPU has achivied 85% of memory")
 
 ```ts
-warn() {
-  return this.warn('WARN', message, data, service, uuid);
+warn(message, fields) {
+  return this.#log('WARN', message, fields);
 }
 ```
 
@@ -113,8 +101,8 @@ Interrompimento do fluxo de uma operação.
 Exemplo: ("User not found on DB")
 
 ```ts
-error() {
-  return this.warn('WARN', message, data, service, uuid);
+error(message, fields) {
+  return this.#log('ERROR', message, fields);
 }
 ```
 
@@ -128,8 +116,32 @@ Erro que leva ao encerramento da aplicação.
 Exemplo: ("Memory usage exceeds max")
 
 ```ts
-fatal() {
-  return this.warn('FATAL', message, data, service, uuid);
+fatal(message, fields) {
+  return this.#log('FATAL', message, fields);
+}
+```
+
+### Private log()
+
+Método privado que centraliza a chamada dos diferentes níveis de logs.
+
+```ts
+#log(type, message, fields = null) {
+  type = NormalizeService.upper(type);
+  // [...]
+  return logData || uuid;
+}
+```
+
+### Private validate()
+
+Método privado para validação de logs.
+
+```ts
+#validate(type, message, fields): void {
+  const errorList = [];
+  // [...]
+  return;
 }
 ```
 
@@ -154,7 +166,7 @@ Método responsável pela invocação de um 'LoggerService' herdando dos atribut
 - Retorna uma nova instância de classe do 'LoggerService';
 
 ```ts
-child({data = null: Object, serviceName = '': string}) {
+child(fields) {
   serviceName =
       serviceName ? serviceName : 'UNKNOWN SERVICE';
   // [...]

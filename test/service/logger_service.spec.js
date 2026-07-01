@@ -64,12 +64,12 @@ describe('LoggerService Class', async () => {
             const data_3 = { test: '123', example: '234' };
 
             const logger    = new LoggerService();
-            const resLogger = logger.info('teste', data_3);
+            const resLogger = logger.info('teste', { data: data_3 });
 
-            const loggerChild = logger.child({data});
-            
-            const loggerChildChild = logger.child({data: data_2});
-            const resLoggerChildChild = loggerChildChild.info('teste');
+            const loggerChild = logger.child({ data: data });
+
+            const loggerChildChild = loggerChild.child({ data: data_2 });
+            const resLoggerChildChild = loggerChildChild.info('resre');
 
             assert.deepEqual(
                 resLogger.data,

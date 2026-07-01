@@ -61,8 +61,20 @@ const censorship_2 = {
         password_2: true,
     },
 };
+
 const censorship_3 = {
-    senha: true,
-}
-contextTeste.create(censorship)
+    password_2:  true,
+};
+
+const censorship_4 = {
+    password: {
+        password_3: true,
+    },
+};
+
+
+// contextTeste.create(censorship)
+contextTeste.create(censorship);
 contextTeste.create(censorship_2);
+contextTeste.create(censorship_3);
+contextTeste.create(censorship_4);

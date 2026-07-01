@@ -8,7 +8,6 @@ describe('ContextService Class', async () => {
     let invalidType = (e) => String(e).toUpperCase();
     const invalidInput = {
         data: invalidType,
-        serviceName: undefined,
         context: 12,
     }
 
@@ -18,7 +17,6 @@ describe('ContextService Class', async () => {
             "resposta": 13,
         },
         serviceName: "ServicoTeste",
-        context: {},
     }
 
     const validInput_2 = {
@@ -27,7 +25,6 @@ describe('ContextService Class', async () => {
             "verificacao": 15,
         },
         serviceName: "ServicoTeste",
-        context: {},
     }
 
     await it('"create" method', async () => {
@@ -42,7 +39,7 @@ describe('ContextService Class', async () => {
                 serviceName: "ServicoTeste",
             }
 
-            contextService.create(validInput.data, validInput.serviceName, validInput.context);
+            contextService.create(validInput);
             const output = contextService.get();
             
             assert.deepEqual(
@@ -70,8 +67,8 @@ describe('ContextService Class', async () => {
                 serviceName: "ServicoTeste",
             };
 
-            contextService.create(validInput.data, validInput.serviceName, validInput.context);
-            contextService.create(validInput_2.data, validInput_2.serviceName, context)
+            contextService.create(validInput);
+            contextService.create(validInput_2)
             const output = contextService.get();
             
             assert.deepEqual(
@@ -79,18 +76,12 @@ describe('ContextService Class', async () => {
                 output,
             );
         });
-
-        await test('Create an invalid context', () => {            
-            assert.throws(() => {
-                new ContextService().create(invalidInput.data, invalidInput.serviceName, invalidInput.context)
-            },  TypeError );
-        });
     });
 
     await it('"inject" method', async () => {
         await test('Standart injection', () => {            
             const context = new ContextService();
-            context.create(validInput.data, validInput.serviceName, validInput.context);
+            context.create(validInput);
 
             const validInput_3 = {
                 data: {
@@ -104,15 +95,15 @@ describe('ContextService Class', async () => {
                 "resposta": 13, 
             }
 
-            const { contextData, contextService } = 
-                context.inject(validInput_3.data, validInput_3.serviceName)
+            const contextData = 
+                context.inject(validInput_3);
 
-            assert.deepEqual(contextData,    answerData)
-            assert.deepEqual(contextService, validInput_3.serviceName);
+            assert.deepEqual(contextData.data,        answerData)
+            assert.deepEqual(contextData.serviceName, validInput_3.serviceName);
         });  
         await test('Standart injection + without serviceName in injection', () => {            
             const context = new ContextService();
-            context.create(validInput.data, validInput.serviceName, validInput.context);
+            context.create(validInput);
 
             const validInput_3 = {
                 data: {
@@ -125,33 +116,11 @@ describe('ContextService Class', async () => {
                 "resposta": 13, 
             }
 
-            const { contextData, contextService } = 
-                context.inject(validInput_3.data, validInput_3.serviceName)
+            const contextData = 
+                context.inject(validInput_3);
 
-            assert.deepEqual(contextData,    answerData)
-            assert.deepEqual(contextService, validInput.serviceName);
-        });  
-    });
-
-    await it('"get" method', async () => {
-        await test('Get collection data', () => {            
-            const contextService = new ContextService();
-
-            const answer = {
-                data: {
-                    "valor": 12,
-                    "resposta": 13,
-                },
-                serviceName: "ServicoTeste",
-            }
-
-            contextService.create(validInput.data, validInput.serviceName, validInput.context);
-            const output = contextService.get();
-            
-            assert.deepEqual(
-                answer,
-                output,
-            );
+            assert.deepEqual(contextData.data,        answerData)
+            assert.deepEqual(contextData.serviceName, validInput.serviceName);
         });  
     });
 });

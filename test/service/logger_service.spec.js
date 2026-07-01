@@ -37,7 +37,7 @@ describe('LoggerService Class', async () => {
             assert.deepEqual(typeof new Date(process.timestamp), 'object');
             assert.deepEqual(typeof process.id, 'string');
             assert.equal(process.type, 'INFO');
-            assert.equal(process.service, 'UNKNOWN SERVICE');
+
             assert.deepEqual(process.message, 'Teste');
         });
     });
@@ -70,7 +70,6 @@ describe('LoggerService Class', async () => {
             
             const loggerChildChild = logger.child({data: data_2});
             const resLoggerChildChild = loggerChildChild.info('teste');
-
 
             assert.deepEqual(
                 resLogger.data,

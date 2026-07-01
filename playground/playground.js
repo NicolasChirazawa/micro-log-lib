@@ -1,10 +1,15 @@
 const { LoggerService } = require('../lib/core/logger_service');
 const { SanitizerService } = require('../lib/core/sanitizer_service');
 const { FormatterService } = require('../lib/core/formatter_service');
+const { ContextService } = require('../lib/core/context_service');
 
 class ServicoTeste {
-    static #name = "ServicoTeste";
+    #name;
 
+    constructor(name) {
+        this.#name = name;
+    }
+    /*
     static testar() {
         const options = { 
             colorize: true, 
@@ -38,6 +43,38 @@ class ServicoTeste {
         );
         console.log(valor);
     }
+
+    static testar_2() {
+        const LogTeste = new LoggerService();
+        LogTeste.info({'teste': 'invalido'}, 'ababa')
+    }
+    */
 };
 
-ServicoTeste.testar();
+const contextTeste = new ContextService();
+const censorship = {
+    token: true,
+    password: true,
+};
+const censorship_2 = {
+    password: {
+        password_2: true,
+    },
+};
+
+const censorship_3 = {
+    password_2:  true,
+};
+
+const censorship_4 = {
+    password: {
+        password_3: true,
+    },
+};
+
+
+// contextTeste.create(censorship)
+contextTeste.create(censorship);
+contextTeste.create(censorship_2);
+contextTeste.create(censorship_3);
+contextTeste.create(censorship_4);

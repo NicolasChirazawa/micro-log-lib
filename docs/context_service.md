@@ -2,6 +2,14 @@
 
 Serviço responsável pela contextualização dos loggers 'child'.
 
+## Particularidade de implementação
+
+O funcionamento das 'injeções' de contexto segue a seguinte lógica:
+ContextService (pai) > ContextService (filho) > LoggerService
+
+Para facilitar na lembrança, a sobreposição, seja do 'data' ou do contexto é sempre
+feita por quem chama a frente.
+
 ## Atributos
 
 - `collection`
@@ -14,18 +22,17 @@ Serviço responsável pela contextualização dos loggers 'child'.
 Alimenta o atributo '#collection' da instância da classe.
 
 ```ts
-create(data, serviceName, context) {
-    this.#validateCreateContext({data, serviceName, context});
-    // [...]
+create(data) {
+  this.#collection = this.inject(data);
 };
 ```
 
-### Private validateCreateContext()
+### Private validate()
 
 Realiza a validação dos parâmetros usados para a criação de contexto na instância do 'contextService'.
 
 ```ts
-#validateCreateContext({data, serviceName, context}) {
+#validateCreateContext(data, context): void {
   let errorList = [];
   // [...]
   return;
@@ -37,21 +44,19 @@ Realiza a validação dos parâmetros usados para a criação de contexto na ins
 Injeta a coleção/contexto da instância do 'contextService' no 'loggerService' de qualquer variação ('DEBUG', 'INFO', 'WARN', 'FATAL').
 
 ```ts
-inject(data, serviceName): Object {
+inject(data): Object {
   let [contextData, contextService] = [data, serviceName];
   // [...]
   return { contextData, contextService };
 };
 ```
 
-*Caso as informações da coleção também estejam presentes no logger, é sobreposto o contexto com o logger vigente.*
+### clone()
 
-### get()
-
-Recolhe os dados instância atual da coleção.
+Retorna uma nova instância do 'ContextService' herdando os parâmetros do pai.
 
 ```ts
-get(): Object {
-    return this.#collection;
+clone(): Object {
+  return new ContextService(this.#collection);
 };
 ```

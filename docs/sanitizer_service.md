@@ -119,3 +119,16 @@ Output:
   }
 }
 ```
+
+### clone()
+
+Retorna uma nova instância do 'SanitizerService' herdando os parâmetros do pai.
+
+```ts
+clone() {
+    return new SanitizerService(
+        this.#redactValue,
+        this.#sanitizeFields,
+    );
+};
+```

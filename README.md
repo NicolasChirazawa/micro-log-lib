@@ -50,36 +50,31 @@ LoggerService.child(
   'ProcessService'
 );
 
-// LoggerService.{level}(message, data?, service?)
+// LoggerService.{level}(message, data?)
 
 LoggerService.info(
   'Usuário autenticado',
-  { userId: 'abc123' },
-  'AuthService'
+  { userId: 'abc123' }
 );
 
 LoggerService.debug(
   'Iniciando conexão',
-  { host: 'localhost' },
-  'DatabaseService'
+  { host: 'localhost' }
 );
 
 LoggerService.warn(
   'Rate limit próximo do limite',
-  { remaining: 5 },
-  'ApiService'
+  { remaining: 5 }
 );
 
 LoggerService.error(
   'Falha ao processar pagamento',
-  { code: 500 },
-  'PaymentService'
+  { code: 500 }
 );
 
 LoggerService.fatal(
   'Estouro de limite de memória',
-  { code: 500 },
-  'ProcessService'
+  { code: 500 }
 );
 ```
 
@@ -87,15 +82,21 @@ LoggerService.fatal(
 
 <h2 name="configuracao">Configuração</h2>
 
-### LoggerService
+Também é possível realizar diversas configurações de instanciação conforme o seu interesse, que atuam em diversos elementos:
 
-O `LoggerService` pode ser utilizado:
+- options;
+- sanitizer;
+- formatter;
+- contextualizer;
 
-- De forma estática;
-- Via instância com configurações específicas;
+---
+
+### Options
+
+O `Options` aplica configurações sobre o funcionamento do ``LoggerService``.
 
 <details>
-<summary>Exemplo utilizando instância personalizada:</summary>
+<summary>Atributos:</summary>
 
 | Opção | Tipo | Descrição |
 |---|---|---|
@@ -103,39 +104,19 @@ O `LoggerService` pode ser utilizado:
 | `outputMode` | `'LOG' \| 'JSON' \| 'BOTH'` | Define o formato de saída dos logs |
 | `type` | `Record<string, string>` | Cor por nível de log |
 
-```js
-const { LoggerService } = require('micro-log-lib');
-
-const options = {
-  colorize: true,
-  outputMode: 'BOTH',
-  type: {
-    ERROR: 'RED',
-    WARN: 'YELLOW',
-    INFO: 'BLUE',
-    DEBUG: 'GREEN'
-  }
-};
-
-const logger = new LoggerService(options);
-
-logger.info('Servidor iniciado na porta 3000');
-```
-
-</details>
-
 <details>
-<summary>Tipos de output</summary>
+<summary>Como funciona o 'output':</summary>
 
 ### LOG
 
+A devolução é via console.log().
 ```txt
 [INFO] [AuthService] Usuário autenticado
-UUID: cf35f8e0dbf4813a5259
 ```
 
 ### JSON
 
+A devolução é via valor:
 ```json
 {
   "uuid": "cf35f8e0dbf4813a5259",
@@ -147,64 +128,125 @@ UUID: cf35f8e0dbf4813a5259
 ```
 
 </details>
+</details>
+
+<details>
+<summary>Exemplo de implementação:</summary>
+
+```js
+const options = {
+  colorize: true,
+  outputMode: 'BOTH',
+  type: {
+    LETAL: 'YELLOW',
+    ERROR: 'RED',
+    WARN: 'YELLOW',
+    INFO: 'BLUE',
+    DEBUG: 'GREEN'
+  },
+};
+
+const logger = new LoggerService({ options });
+```
+
+</details>
 
 ---
 
-### SanitizerService
+### Sanitizer
 
-O `SanitizerService` aplica configurações globais, afetando todos os logs da aplicação independentemente da instância utilizada.
+O `Sanitizer` aplica configurações sobre o `SanitizerService`.
 
 <details>
-<summary>Atributos e exemplo de implementação</summary>
+<summary>Atributos</summary>
 
 | Opção | Tipo | Descrição |
 |---|---|---|
-| `sanitizeFields` | `string[]` | Campos que devem ser ocultados |
+| `sanitizeFields` | `string[]` | Campos que devem ser sanitizados |
 | `redactValue` | `string` | Texto substituto dos campos sanitizados |
 
+</details>
+
+<details>
+<summary>Exemplo de implementação:</summary>
+
 ```js
+const { LoggerService } = require('micro-log-lib');
 const { SanitizerService } = require('micro-log-lib');
 
-const sensitiveFields = [
+const sanitizeValue = '[REDACTED]';
+const sanitizeFields = [
   'access-token',
   'refresh-token',
   'password'
 ];
 
-SanitizerService.addFields(sensitiveFields);
-
-SanitizerService.updateRedactValue(
-  '[SENSITIVE DATA]'
+const sanitizer =  new SanitizerService(sanitizeValue, sanitizeFields);
+const logger = new LoggerService({sanitizer});
 );
 ```
 
 </details>
 
-</details>
-
 ---
 
-### FormatterService
+### Formatter
 
-O `FormatterService` aplica configurações globais, afetando todos os logs da aplicação independentemente da instância utilizada.
+O `Formatter` aplica configurações sobre o `FormatterService`.
 
 <details>
-<summary>Atributos e exemplo de implementação</summary>
+<summary>Atributos</summary>
 
 | Opção | Tipo | Descrição |
 |---|---|---|
 | `format` | `string` | Template em texto para ser usado pelo log |
 
+</details>
+
+<details>
+<summary>Exemplo de implementação</summary>
+
 ```js
+const { LoggerService } = require('micro-log-lib');
 const { FormatterService } = require('micro-log-lib');
 
 const template = '[${timestamp}] [${id}] [${type} - ${service}] ${message}';
-FormatterService.set(template);
+const formatter = new FormatterService(template);
+
+const logger = new LoggerService({formatter})
 ```
 
 </details>
 
 ---
+
+### Contextualizer
+
+O `Contextualizer` aplica configurações sobre o `ContextualizerService`.
+
+<details>
+<summary>Atributos</summary>
+
+| Opção | Tipo | Descrição |
+|---|---|---|
+| `collection` | `Object` | Objeto de contexto a ser injetado |
+
+</details>
+
+<details>
+<summary>Exemplo de implementação</summary>
+
+```js
+const { LoggerService }         = require('micro-log-lib');
+const { ContextualizerService } = require('micro-log-lib');
+
+const context = { serviceName: 'TesteServico }';
+const contextualizer = new ContextualizerService(context);
+
+const logger = new LoggerService({contextualizer})
+```
+
+</details>
 
 <h2 name="documentacao">Como usar?</h2>
 
@@ -227,11 +269,14 @@ Responsável pela geração de loggers estruturados.
 Instância para gerar uma nova configuração do `LoggerService`.
 
 ```ts
-constructor(options = {}) {
-    this.validate(options);
-    // [...]
-    this.#config = merged;
-}
+constructor({
+        sanitizer      = new SanitizerService(),
+        formatter      = new FormatterService(),
+        contextualizer = new ContextualizerService(),
+        options        = {},
+    } = {}) {
+        //[...]
+    }
 ```
 
 ---
@@ -336,7 +381,6 @@ child() {
 
 </details>
 
-
 ### SanitizerService
 
 Responsável pela sanitização dos dados dos logs.
@@ -354,14 +398,12 @@ Responsável pela sanitização dos dados dos logs.
 
 ### Método(s)
 
-#### addFields()
+#### addSanitizeFields()
 
 Adiciona campos personalizados que também devem ser sanitizados.
 
-- Método estático, logo, aplica-se independentemente da instância;
-
 ```ts
-static updateSanitizeFields(option: string[]): void {
+updateSanitizeFields(option: string[]): void {
   // [...]
   SanitizerService.#sanitizeFields = merge;
 }
@@ -380,11 +422,9 @@ Input:
 
 Atualiza o valor utilizado para substituir os campos sensíveis.
 
-Características:
-- Método estático, logo, aplica-se independentemente da instância;
 
 ```ts
-static updateRedactValue(text: string): void {
+updateRedactValue(text: string): void {
   // [...]
   SanitizerService.redactValue = value;
 }
@@ -405,7 +445,7 @@ Características:
 - Sanitização compatível com múltiplos níveis de profundidade construído com recursivdade;
 
 ```ts
-static sanitize(data) {
+sanitize(data) {
   let keys = Object.keys(data);
   // [...]
   return data;
@@ -458,10 +498,8 @@ Responsável pela formatação personalizada dos logs.
 
 Estrutura um novo template ao format.
 
-- Método estático, logo, aplica-se independentemente da instância;
-
 ```ts
-static set format(template) {
+set format(template) {
     this.#format = template;
 }
 ```
@@ -474,11 +512,8 @@ Input: '[${timestamp}] [${id}] [${type} - ${service}] ${message}';
 
 Recupera o valor atual do #format no 'FormatterService'.
 
-Características:
-- Método estático, logo, aplica-se independentemente da instância;
-
 ```ts
-static get format() {
+get format() {
     return this.#format;
 }
 ```
@@ -492,11 +527,10 @@ Output: '[${timestamp}] [${id}] [${type} - ${service}] ${message}';
 Baseado no objeto do log, utiliza-se do template para gerar a mensagem personalizada do log.
 
 Características:
-
 - Transformação do template em um log com valores reais;
 
 ```ts
-static transformTemplateToLog(body) {
+transformTemplateToLog(body) {
     const format = this.#format;
     // [...]
     return log;

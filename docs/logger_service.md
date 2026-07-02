@@ -23,7 +23,7 @@ Método para evocar uma instância da classe `LoggerService` com a possibilidade
 constructor({
       sanitizer = new SanitizerService(),
       formatter = new FormatterService(),
-      context   = new ContextService(),
+      contexter = new ContextService(),
       options   = {},
     } = {}) {
     this.validate(options);
@@ -127,7 +127,7 @@ Método privado que centraliza a chamada dos diferentes níveis de logs.
 
 ```ts
 #log(type, message, fields = null) {
-  type = NormalizeService.upper(type);
+  type = NormalizerService.upper(type);
   // [...]
   return logData || uuid;
 }

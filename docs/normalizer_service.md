@@ -1,4 +1,4 @@
-# NormalizeService
+# NormalizerService
 
 Serviço responsável pela padronização de strings diante as demais classes do sistema.
 

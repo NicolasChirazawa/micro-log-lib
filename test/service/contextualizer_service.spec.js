@@ -1,9 +1,9 @@
 const assert = require('node:assert');
 const { test, describe, it } = require('node:test');
 
-const { ContextService } = require('../../lib/core/context_service');
+const { ContextualizerService } = require('../../lib/core/contextualizer_service');
 
-describe('ContextService Class', async () => {  
+describe('ContextualizerService Class', async () => {  
     
     let invalidType = (e) => String(e).toUpperCase();
     const invalidInput = {
@@ -29,7 +29,7 @@ describe('ContextService Class', async () => {
 
     await it('"create" method', async () => {
         await test('Create a valid context', () => {            
-            const contextService = new ContextService();
+            const contextService = new ContextualizerService();
 
             const answer = {
                 data: {
@@ -49,7 +49,7 @@ describe('ContextService Class', async () => {
         });
 
         await test('Accumulate context using two inputs', () => {            
-            const contextService = new ContextService();
+            const contextualizerService = new ContextualizerService();
 
             const context = {
                 data: {
@@ -67,9 +67,9 @@ describe('ContextService Class', async () => {
                 serviceName: "ServicoTeste",
             };
 
-            contextService.create(validInput);
-            contextService.create(validInput_2)
-            const output = contextService.get();
+            contextualizerService.create(validInput);
+            contextualizerService.create(validInput_2)
+            const output = contextualizerService.get();
             
             assert.deepEqual(
                 answer,
@@ -80,8 +80,8 @@ describe('ContextService Class', async () => {
 
     await it('"inject" method', async () => {
         await test('Standart injection', () => {            
-            const context = new ContextService();
-            context.create(validInput);
+            const contextualizer = new ContextualizerService();
+            contextualizer.create(validInput);
 
             const validInput_3 = {
                 data: {
@@ -96,14 +96,14 @@ describe('ContextService Class', async () => {
             }
 
             const contextData = 
-                context.inject(validInput_3);
+                contextualizer.inject(validInput_3);
 
             assert.deepEqual(contextData.data,        answerData)
             assert.deepEqual(contextData.serviceName, validInput_3.serviceName);
         });  
         await test('Standart injection + without serviceName in injection', () => {            
-            const context = new ContextService();
-            context.create(validInput);
+            const contextualizer = new ContextualizerService();
+            contextualizer.create(validInput);
 
             const validInput_3 = {
                 data: {
@@ -117,7 +117,7 @@ describe('ContextService Class', async () => {
             }
 
             const contextData = 
-                context.inject(validInput_3);
+                contextualizer.inject(validInput_3);
 
             assert.deepEqual(contextData.data,        answerData)
             assert.deepEqual(contextData.serviceName, validInput.serviceName);

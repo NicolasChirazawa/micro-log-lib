@@ -213,7 +213,7 @@ const { FormatterService } = require('micro-log-lib');
 const template = '[${timestamp}] [${id}] [${type} - ${service}] ${message}';
 const formatter = new FormatterService(template);
 
-const logger = new LoggerService({formatter})
+const logger = new LoggerService({formatter});
 ```
 
 </details>
@@ -243,7 +243,7 @@ const { ContextualizerService } = require('micro-log-lib');
 const context = { serviceName: 'TesteServico }';
 const contextualizer = new ContextualizerService(context);
 
-const logger = new LoggerService({contextualizer})
+const logger = new LoggerService({contextualizer});
 ```
 
 </details>
@@ -255,14 +255,15 @@ const logger = new LoggerService({contextualizer})
 Responsável pela geração de loggers estruturados.
 
 <details>
-<summary>Documentação de atributos e métodos</summary>
-
-### Atributo(s)
+<summary>Atributo(s)</summary>
 
 - `config`
    - Campo de configuração da instância da classe `LoggerService`
 
-### Método(s)
+</details>
+
+<details>
+<summary>Método(s)</summary>
 
 #### constructor()
 
@@ -270,13 +271,13 @@ Instância para gerar uma nova configuração do `LoggerService`.
 
 ```ts
 constructor({
-        sanitizer      = new SanitizerService(),
-        formatter      = new FormatterService(),
-        contextualizer = new ContextualizerService(),
-        options        = {},
-    } = {}) {
-        //[...]
-    }
+      sanitizer      = new SanitizerService(),
+      formatter      = new FormatterService(),
+      contextualizer = new ContextualizerService(),
+      options        = {},
+  } = {}) {
+      //[...]
+  }
 ```
 
 ---
@@ -289,7 +290,7 @@ Casos comuns:
 - Valor de variável; 
 - Fluxo detalhado;
 
-Exemplo: ("SELECT 23+ users from database", users);
+Exemplo: ("SELECT 23+ users from database", users)
 
 ```ts
 debug() {
@@ -366,8 +367,10 @@ fatal() {
   return this.warn('FATAL', message, data, service_name, uuid);
 }
 ```
+
+---
  
- #### child()
+#### child()
 
 'Helper' responsável para simplificar a chamada de loggers.
 
@@ -386,9 +389,7 @@ child() {
 Responsável pela sanitização dos dados dos logs.
 
 <details>
-<summary>Documentação de atributos e métodos</summary>
-
-### Atributo(s)
+<summary>Atributo(s)</summary>
 
 - `sanitizeFields`
   - Objeto que possui os campos a serem sanitizados
@@ -396,7 +397,28 @@ Responsável pela sanitização dos dados dos logs.
 - `redactValue`
   - Valor substituto utilizado na sanitização
 
-### Método(s)
+</details>
+
+<details>
+<summary>Método(s)</summary>
+
+#### constructor()
+
+Instância para gerar uma nova configuração do `ContextService`.
+
+```ts
+constructor(redactValue, sanitizeFields) {
+    const standartRedactValue =   '[REDACTED]';
+    const standartSanitizeFields= { 'token': true };
+
+    this.#redactValue = 
+        redactValue ? redactValue : standartRedactValue;
+    this.#sanitizeFields = 
+        sanitizeFields ? sanitizeFields : standartSanitizeFields;
+}
+```
+
+---
 
 #### addSanitizeFields()
 
@@ -421,7 +443,6 @@ Input:
 #### updateRedactValue()
 
 Atualiza o valor utilizado para substituir os campos sensíveis.
-
 
 ```ts
 updateRedactValue(text: string): void {
@@ -478,6 +499,17 @@ Output:
 
 ##### *Supondo que os campos do sanitizer fields são: 'password' e 'phone'
 
+#### clone()
+
+Cria uma nova instância idênctica do ```SanitizeService```.
+
+```ts
+return new SanitizerService(
+            this.#redactValue,
+            this.#sanitizeFields,
+        )
+```
+
 </details>
 
 ### FormatterService
@@ -485,18 +517,21 @@ Output:
 Responsável pela formatação personalizada dos logs.
 
 <details>
-<summary>Documentação de atributos e métodos</summary>
+<summary>Atributo(s)</summary>
 
 ### Atributo(s)
 
 - `format`
   - Formatação personalizada do log;
 
-### Método(s)
+</details>
+
+<details>
+<summary>Método(s)</summary>
 
 #### set format()
 
-Estrutura um novo template ao format.
+Estrutura um novo formato de template.
 
 ```ts
 set format(template) {
@@ -525,6 +560,86 @@ Output: '[${timestamp}] [${id}] [${type} - ${service}] ${message}';
 #### transformTemplateToLog()
 
 Baseado no objeto do log, utiliza-se do template para gerar a mensagem personalizada do log.
+
+Características:
+- Transformação do template em um log com valores reais;
+
+```ts
+transformTemplateToLog(body) {
+    const format = this.#format;
+    // [...]
+    return log;
+}
+```
+
+Input:
+
+```json
+{
+  "type": "FATAL",
+  "message": "teste",
+  "data": {
+    "nome": "falar"
+  },
+  "service": "ServicoTeste"
+}
+```
+
+Output:
+
+```bash
+[2026-05-28T02:49:34.012Z] [e5f1510eaf3b45e2b7d3] [FATAL - ServicoTeste] teste
+```
+
+</details>
+
+### ContextualizerService
+
+Responsável pela injeção de contexto nos logs.
+
+<details>
+<summary>Documentação de atributos e métodos</summary>
+
+### Atributo(s)
+
+- `collection`
+  - Objeto de contexto;
+
+### Método(s)
+
+#### create()
+
+Responsável pela criação de contexto
+
+```ts
+create(data) {
+    this.#collection = this.inject(data);
+}
+```
+
+Input: { serviceName: 'ServicoTeste' };
+
+---
+
+#### inject()
+
+Injeção de contexto, lógica responsável pelo merge de um objeto ao contexto.
+
+```ts
+inject(data = {}) {
+    const contextCollection = this.#collection;
+    // [...]
+    return contextData;
+};
+```
+
+Output: '[${timestamp}] [${id}] [${type} - ${service}] ${message}';
+
+---
+
+#### get()
+
+Recolhe a .
 
 Características:
 - Transformação do template em um log com valores reais;

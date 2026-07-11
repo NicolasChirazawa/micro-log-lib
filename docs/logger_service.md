@@ -21,9 +21,9 @@ Método para evocar uma instância da classe `LoggerService` com a possibilidade
 
 ```ts
 constructor({
-      sanitizer = new SanitizerService(),
-      formatter = new FormatterService(),
-      contexter = new ContextService(),
+      sanitizer      = new SanitizerService(),
+      formatter      = new FormatterService(),
+      contextualizer = new ContextualizerService(),
       options   = {},
     } = {}) {
     this.validate(options);
